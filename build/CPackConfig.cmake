@@ -25,7 +25,11 @@ set(CPACK_CMAKE_GENERATOR "Ninja")
 set(CPACK_COMPONENTS_ALL "")
 set(CPACK_COMPONENT_UNSPECIFIED_HIDDEN "TRUE")
 set(CPACK_COMPONENT_UNSPECIFIED_REQUIRED "TRUE")
+<<<<<<< HEAD
 set(CPACK_DEFAULT_PACKAGE_DESCRIPTION_FILE "/usr/local/share/cmake-3.26/Templates/CPack.GenericDescription.txt")
+=======
+set(CPACK_DEFAULT_PACKAGE_DESCRIPTION_FILE "/usr/share/cmake-3.22/Templates/CPack.GenericDescription.txt")
+>>>>>>> main
 set(CPACK_DEFAULT_PACKAGE_DESCRIPTION_SUMMARY "iCARS_FactorGraph built using CMake")
 set(CPACK_GENERATOR "STGZ;TGZ;TZ")
 set(CPACK_INSTALL_CMAKE_PROJECTS "/home/pierro/Programmation/iCARS_Graph/build;iCARS_FactorGraph;ALL;/")
@@ -37,11 +41,17 @@ set(CPACK_NSIS_INSTALLER_MUI_ICON_CODE "")
 set(CPACK_NSIS_INSTALL_ROOT "$PROGRAMFILES")
 set(CPACK_NSIS_PACKAGE_NAME "iCARS_FactorGraph 0.1.0")
 set(CPACK_NSIS_UNINSTALL_NAME "Uninstall")
+<<<<<<< HEAD
 set(CPACK_OBJCOPY_EXECUTABLE "/usr/bin/objcopy")
 set(CPACK_OBJDUMP_EXECUTABLE "/usr/bin/objdump")
 set(CPACK_OUTPUT_CONFIG_FILE "/home/pierro/Programmation/iCARS_Graph/build/CPackConfig.cmake")
 set(CPACK_PACKAGE_DEFAULT_LOCATION "/")
 set(CPACK_PACKAGE_DESCRIPTION_FILE "/usr/local/share/cmake-3.26/Templates/CPack.GenericDescription.txt")
+=======
+set(CPACK_OUTPUT_CONFIG_FILE "/home/pierro/Programmation/iCARS_Graph/build/CPackConfig.cmake")
+set(CPACK_PACKAGE_DEFAULT_LOCATION "/")
+set(CPACK_PACKAGE_DESCRIPTION_FILE "/usr/share/cmake-3.22/Templates/CPack.GenericDescription.txt")
+>>>>>>> main
 set(CPACK_PACKAGE_DESCRIPTION_SUMMARY "iCARS_FactorGraph built using CMake")
 set(CPACK_PACKAGE_FILE_NAME "iCARS_FactorGraph-0.1.0-Linux")
 set(CPACK_PACKAGE_INSTALL_DIRECTORY "iCARS_FactorGraph 0.1.0")
@@ -55,10 +65,16 @@ set(CPACK_PACKAGE_VERSION_MINOR "1")
 set(CPACK_PACKAGE_VERSION_PATCH "0")
 set(CPACK_PROJECT_NAME "iCARS_FactorGraph")
 set(CPACK_PROJECT_VERSION "0.1.0")
+<<<<<<< HEAD
 set(CPACK_READELF_EXECUTABLE "/usr/bin/readelf")
 set(CPACK_RESOURCE_FILE_LICENSE "/usr/local/share/cmake-3.26/Templates/CPack.GenericLicense.txt")
 set(CPACK_RESOURCE_FILE_README "/usr/local/share/cmake-3.26/Templates/CPack.GenericDescription.txt")
 set(CPACK_RESOURCE_FILE_WELCOME "/usr/local/share/cmake-3.26/Templates/CPack.GenericWelcome.txt")
+=======
+set(CPACK_RESOURCE_FILE_LICENSE "/usr/share/cmake-3.22/Templates/CPack.GenericLicense.txt")
+set(CPACK_RESOURCE_FILE_README "/usr/share/cmake-3.22/Templates/CPack.GenericDescription.txt")
+set(CPACK_RESOURCE_FILE_WELCOME "/usr/share/cmake-3.22/Templates/CPack.GenericWelcome.txt")
+>>>>>>> main
 set(CPACK_SET_DESTDIR "OFF")
 set(CPACK_SOURCE_GENERATOR "TBZ2;TGZ;TXZ;TZ")
 set(CPACK_SOURCE_OUTPUT_CONFIG_FILE "/home/pierro/Programmation/iCARS_Graph/build/CPackSourceConfig.cmake")
