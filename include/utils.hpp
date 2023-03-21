@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* ----------------------------------------------------------------------------
     Copyright (c) 2023, Pierre Baptiste Demonceaux
     All Rights Reserved.
@@ -12,15 +11,10 @@
 
 
 
-=======
->>>>>>> main
 #include <cmath>
 
 
 
 // rad to deg <--> deg to rad conversion
 
-<<<<<<< HEAD
 #endif
-=======
->>>>>>> main

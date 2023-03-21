@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /* ----------------------------------------------------------------------------
     Copyright (c) 2023, Pierre Baptiste Demonceaux
     All Rights Reserved.
@@ -11,8 +10,6 @@ import<iostream>;
 
 
 
-=======
->>>>>>> main
 #include <gnss.hpp>
 
 int main()
