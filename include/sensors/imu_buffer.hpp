@@ -12,13 +12,17 @@
 
 #include <gtsam/base/Vector.h>
 #include <gtsam/geometry/Pose3.h>
+#include <gtsam/symbol.h>
 
+namespace ic_graph {
 
-void imu_buffer::add2buffer()
+    class imu_buffer {
+    public:
+        void add2buffer(double ts, double accx, double accy, double accz, double gyrox, double gyroy, double gyroz);
 
-void
+        void addkey2buffer(gtsam::Key);
 
-
-
+    };
+}
 
 #endif

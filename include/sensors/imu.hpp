@@ -8,9 +8,12 @@
 
 #ifndef GNSS_HPP_
 #define GNSS_HPP_
+
+
 #include <Eigen/Dense>
 #include <gtsam/navigation/ImuFactor.h>
 #include <gtsam/navigation/CombinedImuFactor.h>
+#include <gtsam/inference/Symbol.h>
 
 #include <gtsam/base/Vector.h>
 #include <gtsam/geometry/Pose3.h>

@@ -1,0 +1,25 @@
+{
+  "ActiveTargetSystem": "WSL: Ubuntu-20.04",
+  "DevContainersInfoBarHidden": true,
+  "OutputFoldersPerTargetSystem": {
+    "Local Machine": [
+      "out\\build\\x64-Debug",
+      "out\\install\\x64-Debug"
+    ],
+    "WSL: Ubuntu-20.04": [
+      "out\\build\\x64-Debug",
+      "out\\install\\x64-Debug"
+    ]
+  },
+  "ExpandedNodes": [
+    "",
+    "\\include",
+    "\\include\\sensors",
+    "\\src",
+    "\\src\\lib",
+    "\\src\\lib\\Graph",
+    "\\src\\lib\\sensors"
+  ],
+  "SelectedNode": "\\include\\sensors\\imu.hpp",
+  "PreviewInSolutionExplorer": false
+}
