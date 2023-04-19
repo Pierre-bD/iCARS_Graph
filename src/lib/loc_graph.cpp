@@ -1,0 +1,2 @@
+
+NonlinearFactorGraph* graph = new NonlinearFactorGraph();

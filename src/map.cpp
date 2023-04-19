@@ -5,9 +5,21 @@
     
     See LICENSE for the license information
  * -------------------------------------------------------------------------- */
+import<iostream>;
 
-#include "imu.hpp"
 
-using gtsam::symbol_shorthand::X;  // Pose3 (x,y,z,r,p,y)
-using gtsam::symbol_shorthand::V;  // Vel   (xdot,ydot,zdot)
-using gtsam::symbol_shorthand::B;  // Bias  (ax,ay,az,gx,gy,gz)
+
+
+int main(int argc, char** argv){
+
+    rclcpp::init(argc, argv);
+    rclcpp::NodeOptions nodeParam;
+    nodeParam.use_intra_process_comms(true);
+    rclcpp::executors::MultiThreadedExecutor imuExec; //or use single thread, will see how many nodes I define
+
+    imuExec.add_node();
+
+    imuExec.spin();
+
+    return 0;
+}

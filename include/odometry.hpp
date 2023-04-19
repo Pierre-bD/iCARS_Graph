@@ -9,9 +9,16 @@
 #ifndef GNSS_HPP_
 #define GNSS_HPP_
 
+class Odometry : public ParamServer
+
+ {
+    public: 
+    
+    
 
 
 
+ }
 
 
 
