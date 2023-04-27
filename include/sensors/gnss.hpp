@@ -6,8 +6,8 @@
     See LICENSE for the license information
  * -------------------------------------------------------------------------- */
 
-#ifndef GNSS_HPP_
-#define GNSS_HPP_
+#ifndef _GNSS_HPP_
+#define _GNSS_HPP_
 
 
 #include <Eigen>

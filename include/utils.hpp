@@ -6,14 +6,21 @@
     See LICENSE for the license information
  * -------------------------------------------------------------------------- */
 
-#ifndef UTILS_HPP_
-#define UTILS_HPP_
+#ifndef _UTILS_HPP_
+#define _UTILS_HPP_
 
 
 #include <iostream>
 #include <cmath>
 #include <algorithm>
 #include <map>
+#include <chrono>
+#include <memory>
+#include <mutex>
+#include <vector>
+#include <string>
+#include <functional>
+
 // Ros2 include
 #include <rclcpp/rclcpp.hpp>
 #include <sensor_msgs/msg/imu.hpp>
@@ -23,6 +30,7 @@
 #include <nav_msgs/msg/path.hpp>
 
 #include <nav_msgs/msg/odometry.hpp>
+#include <std_msgs/msg/string.hpp>
 
 // pcl include 
 #include <pcl/point_cloud.h>
@@ -32,5 +40,11 @@
 // 
 
 // rad to deg <--> deg to rad conversion
+
+namespace ic_graph 
+{
+    public:
+    imuTopic = "imuData";
+}
 
 #endif

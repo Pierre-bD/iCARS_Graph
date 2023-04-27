@@ -1,0 +1,44 @@
+rosParams:
+  imuTopic: "/imu/data"
+  lidarTopic: "/points"
+  odomTopic: "odometry/imu"
+  gpsTopic: "odometry/gpsz"
+  navStateTopic: "state/navstate"
+
+
+
+
+
+
+imu:
+  accNoise: 0.001
+  accBias: 0.02
+  gyroNoise: 0.254
+  gyroBias: 0.2656
+  rate: 100
+  bufferLenght: 100
+  gravity: 9.80511
+
+  # Prior Noise and bias
+  gyrNoiseDensity: 1.71e-08               #Continuous-time "Covariance" of gyroscope measurements, microstrain: sigma^2=1.71-08
+  gyrBiasRandomWalk: 9.33e-06             #gnss:9.33e-08 #lidar: 9.33e-01            #Continuous-time "Covariance" describing gyroscope bias random walk, default: 9.33e-08
+  gyrBiasPrior: 0.0 
+
+  accNoiseDensity: 7.225e-08              #Continuous-time "Covariance" of accelerometer, microstrain: sigma^2=7.225e-7
+  accBiasRandomWalk: 1.0e-05              #Continuous-time "Covariance" describing accelerometer bias random walk, default: 1.0e-06
+  accBiasPrior: 0.0 
+
+gnss:
+  useGnssReference: true
+  referenceLatitude: 47.4084860363  # Wangen a.A.: 47.234593265310046, Hoengg: 47.4084860363, Oberglatt: 47.4801402
+  referenceLongitude: 8.50435818058 # Wangen a.A.: 7.681415329904487, Hoengg: 8.50435818058, Oberglatt: 8.49975325
+  referenceAltitude: 565.0          # Wangen a.A.: 472.58400000000074, Hoengg: 565.0, Oberglatt: 474.9
+  referenceHeading: 0.0             # radians, # Wangen a.A.: 0.0, Hoengg: 0.0, Oberglatt: 2.6305
+  rate: 20
+  gnssPositionUnaryNoise: 1.0 #1.0e-02 # x, y, z of global position
+  gnssHeadingUnaryNoise: 1.0 # x,y,z of heading vector
+
+
+lidar:
+  useLidar: true
+  rate: 10

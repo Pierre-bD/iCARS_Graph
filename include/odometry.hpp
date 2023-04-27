@@ -6,8 +6,8 @@
     See LICENSE for the license information
  * -------------------------------------------------------------------------- */
 
-#ifndef GNSS_HPP_
-#define GNSS_HPP_
+#ifndef _ODOMETRY_HPP_
+#define _ODOMETRY_HPP_
 
 class Odometry : public ParamServer
 

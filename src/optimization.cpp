@@ -1,34 +1,37 @@
 #include"optimization.hpp"
 
 namespace ic_graph {
-    
+optimization::optimization(){}
     //Imu prior parameters    
     priorPoseNoise =
     priorVelNoise  = 
     priorBiasNoise =
-
+    
+    std::shared_ptr<gtsam::ISAM2(isamParams)> isam2;
 
         
-        void addIMU();
-        //void addOdometry();
-        //void addLidarOdom();
-        //void addGNSSposition();
-        //void optimizationgraph();
+    void optimization::addIMUFactor(const double time, const Eigen::Vector3d& linearAcc, Eigen::Vector3d& angularVel);
+    //void optimization::addOdometryFactor();
+    //void optimization::addLidarOdomFactor();
+    //void optimization::addGNSSpositionFactor();
+    //void optimization::addGNSSYawFactor();
+    //void optimization::optimizationgraph();
 
 void optimization::initGraph()
 {
 
-
+    initFlag = true;
 }
 
 void optimization::optimizationgraph() 
 {
-
-        
-
-
-
+    startOpti = std::chrono::high_resolution_clock::now();
     
+    gtsam::NavState optimizedState = updateGraph();
+    optimizedState.pose();
+    
+    endOpti = std::chrono::high_resolution_clock::now();
+    currState = 
 }
 
 

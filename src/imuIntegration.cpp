@@ -10,20 +10,13 @@
 #include "utils.hpp"
 
 namespace ic_graph {
-    
+
+IMUintegration::IMUintegration(){}
+
 using gtsam::symbol_shorthand::X;  // Pose3 (x,y,z,r,p,y)
 using gtsam::symbol_shorthand::V;  // Vel   (xdot,ydot,zdot)
 using gtsam::symbol_shorthand::B;  // Bias  (ax,ay,az,gx,gy,gz)
 
-void test::imuCallback_(const sensor_msgs::Imu::ConstPtr& imuMsgPtr) {
-  static bool firstCallbackFlag__ = true;
-  if (firstCallbackFlag__) {
-    firstCallbackFlag__ = false;
-  }
-  Eigen::Vector3d linearAcc(imuMsgPtr->linear_acceleration.x, imuMsgPtr->linear_acceleration.y, imuMsgPtr->linear_acceleration.z);
-  Eigen::Vector3d angularVel(imuMsgPtr->angular_velocity.x, imuMsgPtr->angular_velocity.y, imuMsgPtr->angular_velocity.z);
-  graph_msf::GraphMsfInterface::addImuMeasurementAndPublishState_(linearAcc, angularVel, imuMsgPtr->header.stamp.toSec());
-}
   
 void IMUintegration::initImu()
 {
@@ -58,7 +51,7 @@ void IMUintegration::addImu2Buffer(double tsp, double accx, double accy, double 
 
 
 // create publisher, subscription
-subscribeImu = create_subscription<sensor_msgs::msg::Imu>(imuTopic, ,);
+subscribeImu = create_subscription<sensor_msgs::msg::Imu>("imuData");
 publishImuOdometry = create_publisher<nav_msgs::msg::Odometry>(imuOdomTopic,);
 
 // publish imu odometry through topic

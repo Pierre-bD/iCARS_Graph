@@ -1,13 +1,6 @@
-/* ----------------------------------------------------------------------------
-    Copyright (c) 2023, Pierre Baptiste Demonceaux
-    All Rights Reserved.
-    This file is released under the "BSD-2-Clause License".
-    
-    See LICENSE for the license information
- * -------------------------------------------------------------------------- */
 
-#ifndef IMUINTEGRATION_HPP_
-#define IMUINTEGRATION_HPP_
+#ifndef _IMUINTEGRATION_HPP_
+#define _IMUINTEGRATION_HPP_
 
 #include "utils.hpp"
 #include <sensor_msgs/msg/imu.hpp>
@@ -35,10 +28,17 @@ namespace ic_graph
 
         public: 
 
+        imuTopic = "";
+
         gtsam::Vector6 imuData;
 
         rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr subscribeImu;
         rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr publishImuOdometry;
+        imuCallback = create_callbak_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+
+        rclcpp::SubscriptionOptions options;
+        options.callback_group = imuCallback;
+       
 
         void initImu();
 
@@ -57,13 +57,13 @@ namespace ic_graph
         imuMap imuBuffer;  
         keyMap keyBuffer;
         std::shared_ptr<gtsam::PreintegratedCombinedMeasurements> imuPreintegration;
-
+        imuPreintegration = new gtsam::PreintegratedCombinedMeasurements(,);
         private: 
 
         // see if I put the following in this file or in optimization or loc_graph
 
         gtsam::noiseModel::Diagonal::shared_ptr
-    }
+    };
 }
 
 
