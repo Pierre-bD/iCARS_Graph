@@ -9,11 +9,16 @@ class imuPublisher : public rclcpp::Node
         timer_ = this->create_wall_timer(200ms, std::bind(&imuPublisher::callback, this));
     }
     filePath = "data/imuAndGPSdata.csv"
+    std::ifstream file();
+    std::string value;
+    
+    
 
     private:
     void callback()
     {
         auto msg = std_msgs::msg::String();
+        std::getline(file, value, ','); //get data from the file
         msg.data = ;
         RCLCPP_INFO(this->get_logger(),"Publishing: '&s'", msg.data.c_str());
         publisher_->publish(msg);

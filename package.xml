@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <package format="3">
-    <name>icars_graph</name>
+    <name>ic_graph</name>
     <version>0.2.0</version>
     <buildtool_depend>ament_cmake</buildtool_depend>
 

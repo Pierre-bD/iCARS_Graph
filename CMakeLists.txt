@@ -1,5 +1,5 @@
 cmake_minimum_required(VERSION 3.20.0)
-project(icars_graph VERSION 0.2.0)
+project(ic_graph VERSION 0.2.0)
 
 # specify the C++ standard
 set(CMAKE_CXX_STANDARD 17)
@@ -34,9 +34,9 @@ install(TARGETS ${PROJECT_NAME}_imuIntegration DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY "include/" DESTINATION include)
 
 
-set(CPACK_PROJECT_NAME ${PROJECT_NAME})
-set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
-include(CPack)
+#set(CPACK_PROJECT_NAME ${PROJECT_NAME})
+#set(CPACK_PROJECT_VERSION ${PROJECT_VERSION})
+#include(CPack)
 ament_export_include_directories(include)
 
 ament_package()

@@ -17,16 +17,18 @@
 
 namespace ic_graph
 {
-// param definition IMU
-    float imuAccNoise
-    float imuGyrNoise
-    float imuAccBias
-    float imuGyrBias
-    
+
     
     class IMUintegration {
 
-        public: 
+        public:
+
+        // param definition IMU
+        double   imuAccNoise = 0.0003924;
+        double imuGyrNoise = 0.000205689024915;
+        double imuAccBias = 0.004905;
+        double imuGyrBias = 0.000001454441043;
+     
 
         imuTopic = "";
 

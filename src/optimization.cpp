@@ -1,16 +1,24 @@
 #include"optimization.hpp"
 
 namespace ic_graph {
-optimization::optimization(){}
-    //Imu prior parameters    
-    priorPoseNoise =
-    priorVelNoise  = 
-    priorBiasNoise =
+optimization::optimization()
+{
     
-    std::shared_ptr<gtsam::ISAM2(isamParams)> isam2;
+    isamParams.relinearizeTreshold = 0.01; //define proper value
+    isamParams.relinearizeSkip = 1;
+    bool initFlag = false;
 
-        
-    void optimization::addIMUFactor(const double time, const Eigen::Vector3d& linearAcc, Eigen::Vector3d& angularVel);
+    //Define prior noise for first optimisation
+    //priorPoseNoise = gtsam::noiseModel::Diagonal::sigmas();
+    //priorVelNoise = gtsam::noiseModel::Diagonal::sigma();
+    //priorBiasNoise = gtsam::noiseModel::Diagonal::sigma();
+    subImuPreint = create_subscription<>(,,std::bind());
+    subLidarOdom = create_subscription<>();
+    subGnssData = create_subscription<>();
+    subOdometry = create_subscription<>();
+}
+       
+void optimization::addIMUFactor(const double time, const Eigen::Vector3d& linearAcc, Eigen::Vector3d& angularVel);
     //void optimization::addOdometryFactor();
     //void optimization::addLidarOdomFactor();
     //void optimization::addGNSSpositionFactor();
@@ -19,12 +27,20 @@ optimization::optimization(){}
 
 void optimization::initGraph()
 {
+    factorGraph->addPrior(X(,priorPose,pose_noise_model));
+    factorGraph->addPrior(V(,priorVelocity,velocity_noise_model));
+    factorGraph->addPrior(B(,priorImuBias,bias_noise_model));
 
     initFlag = true;
+    return initFlag;
 }
 
 void optimization::optimizationgraph() 
 {
+    if (initFlag == false):
+    {
+        initGraph();
+    }
     startOpti = std::chrono::high_resolution_clock::now();
     
     gtsam::NavState optimizedState = updateGraph();
