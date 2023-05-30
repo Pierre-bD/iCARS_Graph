@@ -16,3 +16,4 @@ Prerequisites:
 - [CMake](http://www.cmake.org/cmake/resources/software.html) >= 3.0 (Ubuntu: `sudo apt-get install cmake`)
 - [Eigen](https://eigen.tuxfamily.org/index.php?title=Main_Page) >= 3.4
 - [Intel Threaded Building Blocks (TBB)](http://www.threadingbuildingblocks.org/) install first --> (Ubuntu: `sudo apt-get install libtbb-dev`)
+- [Ros2](https://docs.ros.org/en/foxy/Installation.html) = Foxy Fitzroy 
