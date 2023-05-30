@@ -18,12 +18,19 @@ find_package(nav_msgs REQUIRED)
 find_package(sensor_msgs REQUIRED)
 find_package(geometry_msgs REQUIRED)
 find_package(ament_cmake REQUIRED)
+#find_package(rosidl_default_generator REQUIRED)
 
 include_directories(include)
 
 add_executable(${PROJECT_NAME}_test src/test.cpp)
 add_executable(${PROJECT_NAME}_optimization src/optimizarion.cpp)
 add_executable(${PROJECT_NAME}_imuIntegration src/imuIntegration.cpp)
+
+#rosidl_generate_interfaces(${PROJECT_NAME}
+  #  "msg/preint.msg"
+ #   "srv/TrigIntegration.srv"
+    #DEPENDENCIES()
+#)
 
 target_link_libraries(${PROJECT_NAME} gtsam)
 

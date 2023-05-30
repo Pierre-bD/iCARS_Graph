@@ -1,46 +1,125 @@
 #include"optimization.hpp"
+#include"imuIntegration.hpp"
+#include"utils.hpp"
+#include <ros
 
 namespace ic_graph {
-optimization::optimization()
+
+class Optimization : public rclcpp:Node 
 {
+
+Optimization::Optimization() : Node()
+{
+  
     
     isamParams.relinearizeTreshold = 0.01; //define proper value
     isamParams.relinearizeSkip = 1;
+    factorsGraph = std::make_shared<gtsam::NonlinearFactorGraph>();
+    graphValues = std::make_shared<gtsam::Values>();
     bool initFlag = false;
 
     //Define prior noise for first optimisation
     //priorPoseNoise = gtsam::noiseModel::Diagonal::sigmas();
     //priorVelNoise = gtsam::noiseModel::Diagonal::sigma();
     //priorBiasNoise = gtsam::noiseModel::Diagonal::sigma();
-    subImuPreint = create_subscription<>(,,std::bind());
-    subLidarOdom = create_subscription<>();
-    subGnssData = create_subscription<>();
-    subOdometry = create_subscription<>();
+    
+    // create callback group
+    callbackGroupImu = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    callbackGroupOdom = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+    callbackGroupLidarOdom = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
+
+    auto imuOpt = rclcpp::SubscriptionOptions();
+    imuOpt.callback_group = callbackGroupImu;
+    auto odomOpt = rclcpp::SubscriptionOptions();
+    odomOpt.callback_group = callbackGroupOdom;
+    auto lidarOdomOpt = rclcpp::SubscriptionOptions();
+    lidarOdomOpt.callback_group = callbackGroupLidarOdom;
+    //Create callback for GNSS
+
+
+    // create publisher, subscription                   //non definitive name//
+    subscribeImu = create_subscription<sensor_msgs::msg::Imu>("imuData", , std::bind(&IMUintegration::addImu2Buffer, this, std::placeholders::_1), imuOpt); ///check for qos param
+    subLidarOdom = create_subscription<nav_msgs::msg::Odometry>("", , std::bind(&Optimization::lidarOdomManager, this, std::placeholders::_1), lidarOdomOpt);
+    //subGnssData = create_subscription<>("", , std::bind(&Optimization::));
+    //subOdometry = create_subscription<nav_msgs::msg::Odometry>("", , std::bind(&Optimization::odomManager, this, std::placeholders::_1), odomOpt);
 }
        
-void optimization::addIMUFactor(const double time, const Eigen::Vector3d& linearAcc, Eigen::Vector3d& angularVel);
-    //void optimization::addOdometryFactor();
-    //void optimization::addLidarOdomFactor();
-    //void optimization::addGNSSpositionFactor();
-    //void optimization::addGNSSYawFactor();
-    //void optimization::optimizationgraph();
-
-void optimization::initGraph()
+void optimization::initGraph() // graph initialization 
 {
-    factorGraph->addPrior(X(,priorPose,pose_noise_model));
-    factorGraph->addPrior(V(,priorVelocity,velocity_noise_model));
-    factorGraph->addPrior(B(,priorImuBias,bias_noise_model));
+    ///void reset optimizarion ??
 
+    factorsGraph->addPrior(X(,priorPose,pose_noise_model));
+    factorsGraph->addPrior(V(,priorVelocity,velocity_noise_model));
+    factorsGraph->addPrior(B(,priorImuBias,bias_noise_model));
+    
+    // Set initial pose
+    prevPose =  ; //-->FINISH THIS
+    gtsam::PriorFactor<gtsam::Pose3> priorPose(X(0), prevPose, priorPoseNoise);
+    factorsGraph.add(priorPose);
+
+    // Set initial velocity
+    prevVel= gtsam::Vector3(0,0,0);
+    gtsam::PriorFactor<gtsam::Vector3> priorVelocity(V(0), prevVel, priorVelNoise);
+    factorsGraph->add(priorVelocity);
+
+    // Set initial bias
+    prevBias = gtsam::imuBias::ConstantBias();
+    gtsam::PriorFactor<gtsam::imuBias::ConstantBias> priorBias(B(0), prevBias, priorBiasNoise);
+    factorsGraph->add(priorBias);
+
+    // add values to the graph
+    graphValues->insert(X(0), prevPose);
+    graphValues->insert(V(0), prevVel);
+    graphValues->insert(B(0), prevBias);
+
+    // optimize once
+    isam2->update(factorsGraph, graphValues); //CHECK THE DECLARATION OF OPTIMIZER
+    factorsGraph->resize(0);
+    graphValues->clear();
+
+    key=1;
     initFlag = true;
-    return initFlag;
+    return ;
+}
+void optimization::imuManager()
+{
+ // see if it is useful
+}
+void optimization::addIMUFactor(const double time, const Eigen::Vector3d& linearAcc, const Eigen::Vector3d& angularVel)
+{
+    
+    factorsGraph->add(imuFactor_);
 }
 
-void optimization::optimizationgraph() 
+void optimization::addOdometryFactor()
 {
-    if (initFlag == false):
+    factorsGraph->add(odometryFactor_);
+}
+
+void optimization::addLidarOdomFactor()
+{
+    factorsGraph->add(lidarFactor_);
+}
+
+void optimization::addGNSSpositionFactor()
+{
+    factorsGraph->add(gnssFactor_);
+}
+    //void optimization::addGNSSYawFactor();
+
+void optimization::optimizeGraph() 
+{
+    if (initFlag == false)
     {
         initGraph();
     }
+    //if (imuMeasFlag) 
+    //{
+     //   addIMUFactor();
+    //}
+    // Update the IMU preintegrator
+    IMUintegration::updateIntegration();
+
     startOpti = std::chrono::high_resolution_clock::now();
     
     gtsam::NavState optimizedState = updateGraph();
@@ -48,9 +127,12 @@ void optimization::optimizationgraph()
     
     endOpti = std::chrono::high_resolution_clock::now();
     currState = 
+
+    isam2->update(factorsGraph, valuesGraph);
+
 }
 
-
+}
 
 
 }
@@ -63,13 +145,15 @@ int main(int argc, char** argv){
     rclcpp::init(argc, argv);
     rclcpp::NodeOptions nodeParam;
     nodeParam.use_intra_process_comms(true);
-    rclcpp::executors::MultiThreadedExecutor imuExec; //or use single thread, will see how many nodes I define
+    rclcpp::executors::MultiThreadedExecutor optiExec; //or use single thread, will see how many nodes I define
     
+    auto poseOptimization = std::make_shared<Optimization>(nodeParam);
 
-    imuExec.add_node();
+    optiExec.add_node(poseOptimization);
 
-    //imuExec.spin();
+    optiExec.spin();
 
+    rclcpp::shutdown();
 
     return 0;
 }

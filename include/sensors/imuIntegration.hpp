@@ -4,11 +4,11 @@
 
 #include "utils.hpp"
 #include <sensor_msgs/msg/imu.hpp>
+#include "srv/TrigIntegration.srv"
 
 
 #include <Eigen/Dense>
-#include <gtsam/navigation/ImuFactor.h>
-#include <gtsam/navigation/CombinedImuFactor.h>
+
 #include <gtsam/inference/Symbol.h>
 
 #include <gtsam/base/Vector.h>
@@ -23,26 +23,37 @@ namespace ic_graph
 
         public:
 
-        // param definition IMU
-        double   imuAccNoise = 0.0003924;
+        // IMU parameters definition 
+        double imuAccNoise = 0.0003924;
         double imuGyrNoise = 0.000205689024915;
         double imuAccBias = 0.004905;
         double imuGyrBias = 0.000001454441043;
-     
+        // prior IMU parameters
+        gtsam::Vector3 priorAccBias = gtsam::Vector3 (0.0, 0.0, 0.0);
+        gtsam::Vector3 priorGyrBias = gtsam::Vector3 (0.0, 0.0, 0.0);
 
-        imuTopic = "";
 
-        gtsam::Vector6 imuData;
+        bool imuResetFlag;
+        boost::shared_ptr<gtsam::PreintegratedCombinedMeasurements::Params> preintParamsPtr;
+        std::shared_ptr<gtsam::imuBias::ConstantBias> imuPriorBiasPtr;
+        std::shared_ptr<gtsam::PreintegratedCombinedMeasurements> imuPreintegrationPtr;
 
-        rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr subscribeImu;
-        rclcpp::Publisher<nav_msgs::msg::Odometry>::SharedPtr publishImuOdometry;
-        imuCallback = create_callbak_group(rclcpp::CallbackGroupType::MutuallyExclusive);
-
-        rclcpp::SubscriptionOptions options;
-        options.callback_group = imuCallback;
+        gtsam::Vector6 imuData; 
        
 
-        void initImu();
+
+        typedef std::map<double, gtsam::Vector6, std::less<double>, Eigen::aligned_allocator<std::pair<const double, gtsam::Vector6>>> ImuMap;
+        typedef std::map<double, gtsam::Key, std::less<double>, Eigen::aligned_allocator<std::pair<const double, gtsam::Vector6>>> KeyMap;
+        
+        // define buffer of map type
+        imuMap imuBuffer;  
+        keyMap keyBuffer;
+        
+        
+        //imuPreintegration = new gtsam::PreintegratedCombinedMeasurements(,);
+        private: 
+
+        bool initImu();
 
         void addImu2Buffer(double tsp, double accx, double accy, double accz, double gyrox, double gyroy, double gyroz);
     
@@ -50,17 +61,9 @@ namespace ic_graph
 
         void imuManager();
 
-        private:
-        
-        typedef std::map<double, gtsam::Vector6, std::less<double>, Eigen::aligned_allocator<std::pair<const double, gtsam::Vector6>>> ImuMap;
-        typedef std::map<double, gtsam::Key, std::less<double>, Eigen::aligned_allocator<std::pair<const double, gtsam::Vector6>>> KeyMap;
-        
-        // define buffer of map type
-        imuMap imuBuffer;  
-        keyMap keyBuffer;
-        std::shared_ptr<gtsam::PreintegratedCombinedMeasurements> imuPreintegration;
-        imuPreintegration = new gtsam::PreintegratedCombinedMeasurements(,);
-        private: 
+        bool resetImu();
+
+        void updateIntegration();
 
         // see if I put the following in this file or in optimization or loc_graph
 

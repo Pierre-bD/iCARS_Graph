@@ -18,5 +18,6 @@ def generate_launch_description():
        # params,
 
         Node(package="icars_graph", executable="icars_graph_test", name="icars_graph_test", parameters=[param_file], output="screen"),
-        Node(package="icars_graph", executable="icars_graph_optimization", name="icars_graph_optimization", parameters=[param_file], output="screen"),
-        Node(package="icars_graph", executable="icars_graph_imuIntegration", name="icars_graph_imuIntegration", parameters=[param_file], output="screen")])
+        #Node(package="icars_graph", executable="icars_graph_optimization", name="icars_graph_optimization", parameters=[param_file], output="screen"),
+        #Node(package="icars_graph", executable="icars_graph_imuIntegration", name="icars_graph_imuIntegration", parameters=[param_file], output="screen")
+        ])
