@@ -122,16 +122,16 @@ CMAKE_PROJECT_DESCRIPTION:STATIC=
 CMAKE_PROJECT_HOMEPAGE_URL:STATIC=
 
 //Value Computed by CMake
-CMAKE_PROJECT_NAME:STATIC=iCARS_FactorGraph
+CMAKE_PROJECT_NAME:STATIC=ic_graph
 
 //Value Computed by CMake
-CMAKE_PROJECT_VERSION:STATIC=0.1.0
+CMAKE_PROJECT_VERSION:STATIC=0.2.0
 
 //Value Computed by CMake
 CMAKE_PROJECT_VERSION_MAJOR:STATIC=0
 
 //Value Computed by CMake
-CMAKE_PROJECT_VERSION_MINOR:STATIC=1
+CMAKE_PROJECT_VERSION_MINOR:STATIC=2
 
 //Value Computed by CMake
 CMAKE_PROJECT_VERSION_PATCH:STATIC=0
@@ -221,6 +221,15 @@ iCARS_FactorGraph_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 iCARS_FactorGraph_SOURCE_DIR:STATIC=E:/Git_Repo/iCARS_Graph
+
+//Value Computed by CMake
+ic_graph_BINARY_DIR:STATIC=E:/Git_Repo/iCARS_Graph/out/build/x64-Debug
+
+//Value Computed by CMake
+ic_graph_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+ic_graph_SOURCE_DIR:STATIC=E:/Git_Repo/iCARS_Graph
 
 
 ########################

@@ -8,7 +8,7 @@ namespace ic_graph {
 class Optimization : public rclcpp:Node 
 {
 
-Optimization::Optimization() : Node()
+Optimization::Optimization()
 {
   
     

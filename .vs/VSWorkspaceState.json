@@ -15,11 +15,8 @@
     "",
     "\\include",
     "\\include\\sensors",
-    "\\src",
-    "\\src\\lib",
-    "\\src\\lib\\Graph",
-    "\\src\\lib\\sensors"
+    "\\src"
   ],
-  "SelectedNode": "\\include\\sensors\\imu.hpp",
+  "SelectedNode": "\\include\\optimization.hpp",
   "PreviewInSolutionExplorer": false
 }

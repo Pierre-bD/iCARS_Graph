@@ -25,7 +25,7 @@
 namespace ic_graph {
     class Optimization : Node()
     {
-        Optimization ()  //Constructor
+        
         
         private:
         //gtsam::
@@ -38,6 +38,7 @@ namespace ic_graph {
         
         public: 
 
+        Optimization();  //Constructor
         bool imuResetFlag = true;
         bool firstOptiFlag = false;
     
