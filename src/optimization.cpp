@@ -5,13 +5,8 @@
 
 namespace ic_graph {
 
-class Optimization : public rclcpp:Node 
+Optimization::Optimization() : Node("optimization"), count_(0)
 {
-
-Optimization::Optimization()
-{
-  
-    
     isamParams.relinearizeTreshold = 0.01; //define proper value
     isamParams.relinearizeSkip = 1;
     factorsGraph = std::make_shared<gtsam::NonlinearFactorGraph>();
@@ -38,10 +33,11 @@ Optimization::Optimization()
 
 
     // create publisher, subscription                   //non definitive name//
-    subscribeImu = create_subscription<sensor_msgs::msg::Imu>("imuData", , std::bind(&IMUintegration::addImu2Buffer, this, std::placeholders::_1), imuOpt); ///check for qos param
-    subLidarOdom = create_subscription<nav_msgs::msg::Odometry>("", , std::bind(&Optimization::lidarOdomManager, this, std::placeholders::_1), lidarOdomOpt);
-    //subGnssData = create_subscription<>("", , std::bind(&Optimization::));
+    subscribeImu = create_subscription<sensor_msgs::msg::Imu>("carla/odometry/imu", , std::bind(&IMUintegration::addImu2Buffer, this, std::placeholders::_1), imuOpt); ///check for qos param
+    subLidarOdom = create_subscription<nav_msgs::msg::Odometry>("ic_graph/odometry/lidar", , std::bind(&Optimization::lidarOdomManager, this, std::placeholders::_1), lidarOdomOpt);
+    //subGnssData = create_subscription<>("carla/odometry/gnss", , std::bind(&Optimization::));
     //subOdometry = create_subscription<nav_msgs::msg::Odometry>("", , std::bind(&Optimization::odomManager, this, std::placeholders::_1), odomOpt);
+    //publishPose = create_publisher<>
 }
        
 void optimization::initGraph() // graph initialization 
@@ -125,17 +121,20 @@ void optimization::optimizeGraph()
     gtsam::NavState optimizedState = updateGraph();
     optimizedState.pose();
     
-    endOpti = std::chrono::high_resolution_clock::now();
+    
     currState = 
 
     isam2->update(factorsGraph, valuesGraph);
 
-}
+
+    endOpti = std::chrono::high_resolution_clock::now();
 
 }
 
 
+
 }
+
 
 int main(int argc, char** argv){
 

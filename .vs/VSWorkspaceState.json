@@ -17,6 +17,6 @@
     "\\include\\sensors",
     "\\src"
   ],
-  "SelectedNode": "\\include\\optimization.hpp",
+  "SelectedNode": "\\include\\sensors\\lidarOdom.hpp",
   "PreviewInSolutionExplorer": false
 }

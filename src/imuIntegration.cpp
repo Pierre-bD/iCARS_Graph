@@ -84,9 +84,12 @@ void IMUintegration::addImu2Buffer(double tsp, double accx, double accy, double 
 
   }
 
-  void IMUintegration::updateIntegration()
+  void IMUintegration::updateIntegration(measures)
   {
     imuPreintegrationPtr->resetIntegrationAndSetBias(prev_bias); //change variable
+    // integrating imu measurements
+    auto currentIter = measures.begin();
+    auto prevIter = currentIter;
     for ()
     {
       double dt = current - prev; // to do
@@ -107,19 +110,4 @@ void IMUintegration::addImu2Buffer(double tsp, double accx, double accy, double 
 // publish imu odometry through topic
 //publishImuOdometry->publish();
 
-}
-
-int main(int argc, char** argv){
-
-    rclcpp::init(argc, argv);
-    rclcpp::NodeOptions nodeParam;
-    nodeParam.use_intra_process_comms(true);
-    rclcpp::executors::MultiThreadedExecutor imuExec; // one executor for the subscriber + one for the server/client 
-    auto imuPreint = std::make_shared<IMUintegration>();
-    
-    imuExec.add_node(imuPreint);
-
-    imuExec.spin();
-    rclcpp::shutdown();
-    return 0;
 }

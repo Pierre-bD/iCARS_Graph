@@ -23,10 +23,9 @@
 
 
 namespace ic_graph {
-    class Optimization : Node()
+    class Optimization : public rclcpp:Node
     {
-        
-        
+                
         private:
         //gtsam::
 
@@ -42,17 +41,22 @@ namespace ic_graph {
         bool imuResetFlag = true;
         bool firstOptiFlag = false;
     
-        //graph 
-
+        
+        //######//
+        // Publisher / callback
+        //######//
         rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr subscribeImu;
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr ;
         rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr ;
-        rclcpp::Subscription<  ; //create gps
-        //rclcpp::Publisher
+        //rclcpp::Subscription< > ; //create gps
+       
         rclcpp::CallbackGroup::SharedPtr callbackGroupImu;
         rclcpp::CallbackGroup::SharedPtr callbackGroupOdom;
         rclcpp::CallbackGroup::SharedPtr callbackGroupLidarOdom;
 
+        //######//
+        //graph 
+        //######//
         std::shared_ptr<gtsam::IncrementalFixedLagSmoother> fixedLagSmoother;
         std::shared_ptr<gtsam::NonlinearFactorGraph> factorsGraph;
         std::shared_ptr<gtsam::Values> graphValues;
@@ -90,8 +94,6 @@ namespace ic_graph {
         gtsam::noiseModel::Diagonal::shared_ptr priorVelNoise;
         gtsam::noiseModel::Diagonal::shared_ptr priorBiasNoise;
         gtsam::noiseModel::Diagonal::shared_ptr correctionNoise;
-
-        protected: 
 
         void initGraph(); //init graph at start-up
         void optimizeGraph(); //optimize the graph after adding factors and values
