@@ -8,6 +8,9 @@
 #include <pcl/search/kdtree.h>
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/filters/conditional_removal.h>
+#include <boost/circular_buffer.hpp>
+
+
 
 #include <rclcpp/rclcpp.hpp>
 
@@ -38,6 +41,7 @@ namespace ic_graph
             void odomBuffer();
             void motionCompensation();
             void pubLidarOdom();
+            boost::circular_buffer<PointCloud2Ptr> pointCloudBuffer_;
     }
 
 

@@ -9,8 +9,10 @@ Optimization::Optimization() : Node("optimization"), count_(0)
 {
     isamParams.relinearizeTreshold = 0.01; //define proper value
     isamParams.relinearizeSkip = 1;
-    factorsGraph = std::make_shared<gtsam::NonlinearFactorGraph>();
-    graphValues = std::make_shared<gtsam::Values>();
+    factorsGraph_ = std::make_shared<gtsam::NonlinearFactorGraph>();
+    graphValues_ = std::make_shared<gtsam::Values>();
+    fixedLagSmoother_ =std::make_shared<gtsam::IncrementalFixedLagSmoother>(); //add params
+    imuPreintegration_ = std::make_shared<gtsam::PreintegratedCombinedMeasurements>(imuparams, *imuPriorBias_);
     bool initFlag = false;
 
     //Define prior noise for first optimisation
@@ -44,19 +46,19 @@ void optimization::initGraph() // graph initialization
 {
     ///void reset optimizarion ??
 
-    factorsGraph->addPrior(X(,priorPose,pose_noise_model));
-    factorsGraph->addPrior(V(,priorVelocity,velocity_noise_model));
-    factorsGraph->addPrior(B(,priorImuBias,bias_noise_model));
+    factorsGraph_->addPrior(X(,priorPose,pose_noise_model));
+    factorsGraph_->addPrior(V(,priorVelocity,velocity_noise_model));
+    factorsGraph_->addPrior(B(,priorImuBias,bias_noise_model));
     
     // Set initial pose
     prevPose =  ; //-->FINISH THIS
     gtsam::PriorFactor<gtsam::Pose3> priorPose(X(0), prevPose, priorPoseNoise);
-    factorsGraph.add(priorPose);
+    factorsGraph_->add(priorPose);
 
     // Set initial velocity
     prevVel= gtsam::Vector3(0,0,0);
     gtsam::PriorFactor<gtsam::Vector3> priorVelocity(V(0), prevVel, priorVelNoise);
-    factorsGraph->add(priorVelocity);
+    factorsGraph_->add(priorVelocity);
 
     // Set initial bias
     prevBias = gtsam::imuBias::ConstantBias();
@@ -70,8 +72,10 @@ void optimization::initGraph() // graph initialization
 
     // optimize once
     isam2->update(factorsGraph, graphValues); //CHECK THE DECLARATION OF OPTIMIZER
-    factorsGraph->resize(0);
+    factorsGraph_->resize(0);
     graphValues->clear();
+
+    imuPreintegrationPtr->resetIntegrationAndSetBias(prev_bias); //change variable
 
     key=1;
     initFlag = true;

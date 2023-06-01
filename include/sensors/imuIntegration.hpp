@@ -34,9 +34,9 @@ namespace ic_graph
 
 
         bool imuResetFlag;
-        boost::shared_ptr<gtsam::PreintegratedCombinedMeasurements::Params> preintParamsPtr;
-        std::shared_ptr<gtsam::imuBias::ConstantBias> imuPriorBiasPtr;
-        std::shared_ptr<gtsam::PreintegratedCombinedMeasurements> imuPreintegrationPtr;
+        boost::shared_ptr<gtsam::PreintegratedCombinedMeasurements::Params> preintParams_;
+        std::shared_ptr<gtsam::imuBias::ConstantBias> imuPriorBias_;
+        std::shared_ptr<gtsam::PreintegratedCombinedMeasurements> imuPreintegration_;
 
         gtsam::Vector6 imuData; 
        

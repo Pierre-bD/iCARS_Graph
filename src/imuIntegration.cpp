@@ -80,13 +80,13 @@ void IMUintegration::addImu2Buffer(double tsp, double accx, double accy, double 
   {
     imuPreintegration->resetIntegrationAndSetBias();
     imuResetFlag = true;
-    return imuRese
+    return imuResetFlag;
 
   }
 
   void IMUintegration::updateIntegration(measures)
   {
-    imuPreintegrationPtr->resetIntegrationAndSetBias(prev_bias); //change variable
+  
     // integrating imu measurements
     auto currentIter = measures.begin();
     auto prevIter = currentIter;

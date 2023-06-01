@@ -57,9 +57,9 @@ namespace ic_graph {
         //######//
         //graph 
         //######//
-        std::shared_ptr<gtsam::IncrementalFixedLagSmoother> fixedLagSmoother;
-        std::shared_ptr<gtsam::NonlinearFactorGraph> factorsGraph;
-        std::shared_ptr<gtsam::Values> graphValues;
+        std::shared_ptr<gtsam::IncrementalFixedLagSmoother> fixedLagSmoother_;
+        std::shared_ptr<gtsam::NonlinearFactorGraph> factorsGraph_;
+        std::shared_ptr<gtsam::Values> graphValues_;
         gtsam::ISAM2Params isamParams; //ISAM2 parameters
         std::shared_ptr<gtsam::ISAM2(isamParams)> isam2; //ISAM2 smoother --> CHECK THE DECLARATION
 
