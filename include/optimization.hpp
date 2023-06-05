@@ -23,7 +23,7 @@
 
 
 namespace ic_graph {
-    class Optimization : public rclcpp:Node
+    class Optimization : public rclcpp::Node
     {
                 
         private:
