@@ -12,7 +12,7 @@
 using namespace std::chrono_literals;
 namespace ic_graph {
 
-//IMUintegration::IMUintegration()
+IMUintegration::IMUintegration(){}
 //{
 //  imuResetFlag = true;
   // create publisher, subscription
@@ -36,7 +36,7 @@ bool IMUintegration::initImu(const double grav, const std::string& gravityDir)
   }
 
   preintParamsPtr->setAccelerometerCovariance(gtsam::Matrix33::Identity(3,3) * pow(imuAccNoise,2));
-  preintParamsPtr->setINtegrationCovariance(gtsam::Matrix33::Identity (3, 3) * pow(imuGyrNoise,2)); ///finish this///
+  preintParamsPtr->setIntegrationCovariance(gtsam::Matrix33::Identity (3, 3) * pow(imuGyrNoise,2)); ///finish this///
 
   preintParamsPtr->setGyroscopeCovariance(gtsam::Matrix33::Identity(3, 3) * 1e-8); ///finish this///
 
@@ -48,10 +48,23 @@ bool IMUintegration::initImu(const double grav, const std::string& gravityDir)
   //init prior bias
   imuPriorBiasPtr = std::make_shared<gtsam::imuBias::ConstantBias>(priorAccBias, priorGyrBias);
   //init pointer
-  imuPreintegrationPtr = std::make_shared<gtsam::PreintegratedCombinedMeasurements>(preintParamsPtr, *imuPriorBiasPtr);
+  imuPreintegrationPtr_ = std::make_shared<gtsam::PreintegratedCombinedMeasurements>(preintParamsPtr, *imuPriorBiasPtr);
 
   std::cout <<"Imu initialised" << std::endl;
   return true;
+}
+
+void IMUintegration::convertImu()
+{
+  imuData = *imuRaw;
+    
+    acc = extRot * acc;
+    imu.
+    
+
+    
+    gyro = exRot * gyro;
+    imu.
 }
 void IMUintegration::addImu2Buffer(double tsp, double accx, double accy, double accz, double gyrox, double gyroy, double gyroz)
   {
@@ -87,8 +100,9 @@ void IMUintegration::addImu2Buffer(double tsp, double accx, double accy, double 
   void IMUintegration::updateIntegration(measures)
   {
   
-    // integrating imu measurements
+    // Step1 : integrate imu measurements
     auto currentIter = measures.begin();
+    // Step2 : 
     auto prevIter = currentIter;
     for ()
     {

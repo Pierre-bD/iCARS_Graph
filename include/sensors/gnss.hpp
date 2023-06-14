@@ -10,12 +10,26 @@
 #define _GNSS_HPP_
 
 
-#include <Eigen>
+//#include <Eigen>
+
+namespace ic_graph {
+class gnss
+{
+private:
+    
+public:
+    gnss(/* args */);
+
+    
+    void addGnssPosition();
+    void addGnssYaw();
+
+};
 
 
 
 
-
+}
 
 
 

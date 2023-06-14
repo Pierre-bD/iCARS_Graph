@@ -8,6 +8,8 @@
 #include <pcl/search/kdtree.h>
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/filters/conditional_removal.h>
+#include <pcl/registration/ndt.h>
+#include <pcl/filters/approximate_voxel_grid.h>
 #include <boost/circular_buffer.hpp>
 
 

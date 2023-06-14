@@ -17,6 +17,7 @@
 #include <chrono>
 #include <memory>
 #include <mutex>
+#include <thread>
 #include <vector>
 #include <string>
 #include <functional>
@@ -24,6 +25,10 @@
 #include <deque>
 #include <boost/>
 
+#include <gtsam/inference/Symbol.h>
+
+#include <gtsam/base/Vector.h>
+#include <gtsam/geometry/Pose3.h>
 
 
 // Ros2 include
@@ -33,6 +38,7 @@
 
 #include <nav_msgs/msg/odometry.hpp>
 #include <nav_msgs/msg/path.hpp>
+#include <sensor_msgs/msg/nav_sat_fix.hpp>
 
 #include <nav_msgs/msg/odometry.hpp>
 #include <std_msgs/msg/string.hpp>

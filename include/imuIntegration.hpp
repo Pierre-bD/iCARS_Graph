@@ -9,18 +9,16 @@
 
 #include <Eigen/Dense>
 
-#include <gtsam/inference/Symbol.h>
 
-#include <gtsam/base/Vector.h>
-#include <gtsam/geometry/Pose3.h>
-
+#include <boost/shared_ptr.hpp>
 
 namespace ic_graph
 {
 
     
-    class IMUintegration {
-
+    class IMUintegration 
+    {
+        IMUintegration();
         public:
 
         // IMU parameters definition 

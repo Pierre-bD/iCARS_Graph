@@ -17,7 +17,7 @@
 #include <gtsam/navigation/ImuFactor.h>
 #include <gtsam/navigation/CombinedImuFactor.h>
 #include <gtsam/navigation/GPSFactor.h>
-
+#include <gtsam/inference/Key.h>
 
 #include <rclcpp/rclcpp.hpp>
 
@@ -27,13 +27,20 @@ namespace ic_graph {
     {
                 
         private:
-        //gtsam::
-
         //rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subImuOdometry;    
-        
+        std::mutex lidarMutex_;
         std::chrono::time_point<std::chrono::high_resolution_clock> startOpti;
         std::chrono::time_point<std::chrono::high_resolution_clock> endOpti;
         //define noise model for testing with GTSAM data
+
+        //######//
+        //graph 
+        //######//
+        std::shared_ptr<gtsam::IncrementalFixedLagSmoother> fixedLagSmoother_;
+        std::shared_ptr<gtsam::NonlinearFactorGraph> factorsGraph_;
+        std::shared_ptr<gtsam::Values> graphValues_;
+        gtsam::ISAM2Params isamParams; //ISAM2 parameters
+        gtsam::FixedLagSmootherKeyTimestampMap keyTimeStampMap_;
         
         public: 
 
@@ -46,29 +53,19 @@ namespace ic_graph {
         // Publisher / callback
         //######//
         rclcpp::Subscription<sensor_msgs::msg::Imu>::SharedPtr subscribeImu;
-        rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr ;
-        rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr ;
-        //rclcpp::Subscription< > ; //create gps
+        rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subLidarOdom;
+        rclcpp::Subscription<sensor_msgs::msg::NavSatFix>::SharedPtr subGnss;
+        //rclcpp::Subscription< > ; //create  carla vehicle pose node / truth path
        
         rclcpp::CallbackGroup::SharedPtr callbackGroupImu;
         rclcpp::CallbackGroup::SharedPtr callbackGroupOdom;
         rclcpp::CallbackGroup::SharedPtr callbackGroupLidarOdom;
-
-        //######//
-        //graph 
-        //######//
-        std::shared_ptr<gtsam::IncrementalFixedLagSmoother> fixedLagSmoother_;
-        std::shared_ptr<gtsam::NonlinearFactorGraph> factorsGraph_;
-        std::shared_ptr<gtsam::Values> graphValues_;
-        gtsam::ISAM2Params isamParams; //ISAM2 parameters
-        std::shared_ptr<gtsam::ISAM2(isamParams)> isam2; //ISAM2 smoother --> CHECK THE DECLARATION
+        rclcpp::CallbackGroup::SharedPtr callbackGroupGnss;
 
         //Prior noise model 
         auto priorPoseNoise = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.5, 0.5, 0.5).finished());
         auto priorVelNoise = noiseModel::Isotropic::Sigma(3, 0.1);
         auto priorBiasNoise = noiseModel::Isotropic::Sigma(6, 1e-3);
-
-
         auto pose_noise_model = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.5, 0.5, 0.5).finished());  // rad,rad,rad,m, m, m
 
         auto velocity_noise_model = noiseModel::Isotropic::Sigma(3, 0.1);  // m/s
@@ -80,30 +77,36 @@ namespace ic_graph {
         //factorGraph.;
 
         //Previous State
-        gtsam::Pose3 prevPose;
-        gtsam::Vector3 prevVel;
-        gtsam::NavState prevState;
-        gtsam::imuBias::ConstantBias prevBias;
-
-
-        
+        gtsam::Pose3 prevPose_;
+        gtsam::Vector3 prevVel_;
+        gtsam::NavState prevState_;
+        gtsam::imuBias::ConstantBias prevBias_;
+       
         // Current State
         gtsam::NavState currState;
+        gtsam::key priorKey;
+        gtsam::key key;
 
         gtsam::noiseModel::Diagonal::shared_ptr priorPoseNoise;
         gtsam::noiseModel::Diagonal::shared_ptr priorVelNoise;
         gtsam::noiseModel::Diagonal::shared_ptr priorBiasNoise;
         gtsam::noiseModel::Diagonal::shared_ptr correctionNoise;
 
+        // Transformations
+        gtsam::Pose3 T_W_O_; //change name
+        gtsam::Vector3 I_v_W_I; //change name
+
+
         void initGraph(); //init graph at start-up
         void optimizeGraph(); //optimize the graph after adding factors and values
         void addIMUFactor(const double time, const Eigen::Vector3d& linearAcc, Eigen::Vector3d& angularVel);
-        void addOdometryFactor();
+        //void addOdometryFactor();
         void addLidarOdomFactor();
-        void addGNSSpositionFactor();
-        void addGNSSYawFactor();
+        void addDualLidarOdomFactor();
+        void addGnssFactor();
         void imuManager();
         void lidarOdomManager();
+        void gnssManager();
         
     };
 
