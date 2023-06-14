@@ -25,7 +25,7 @@ settings.no_rendering_mode = True
 #settings.max_substep_delta_time = 0.01
 #settings.max_substeps = 10
 #settings.synchronous_mode = True
-settings.fixed_delta_seconds = 0.02
+settings.fixed_delta_seconds = 0.1
 world.apply_settings(settings)
 bp_lib = world.get_blueprint_library() 
 spawn_points = world.get_map().get_spawn_points() #get spawn points
@@ -159,10 +159,10 @@ lidar_init_trans = carla.Transform(carla.Location(x=0.0, y=0.0, z=1.6))
 lidar = world.spawn_actor(lidar_bp, lidar_init_trans, attach_to=vehicle)
 
 # Spawn camera
-#camera_bp = bp_lib.find('sensor.camera.rgb')
-#camera_bp.set_attribute('role_name','camera')
-#camera_init_trans = carla.Transform(carla.Location(x=-3, y=0, z=2.5), carla.Rotation(pitch=0.0, yaw=0.0, roll=0.0))
-#camera = world.spawn_actor(camera_bp, camera_init_trans, attach_to=vehicle)
+camera_bp = bp_lib.find('sensor.camera.rgb')
+camera_bp.set_attribute('role_name','camera')
+camera_init_trans = carla.Transform(carla.Location(x=-3, y=0, z=2.5), carla.Rotation(pitch=0.0, yaw=0.0, roll=0.0))
+camera = world.spawn_actor(camera_bp, camera_init_trans, attach_to=vehicle)
     
 # Add auxilliary data structures
 point_list = o3d.geometry.PointCloud()

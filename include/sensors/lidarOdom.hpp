@@ -1,5 +1,5 @@
-#ifndef _LIDAR_HPP_
-#define _LIDAR_HPP_
+#ifndef _LIDARODOM_HPP_
+#define _LIDARODOM_HPP_
 
 #include <pcl/point_cloud.h>
 #include <pcl/point_types.h>
@@ -8,6 +8,8 @@
 #include <pcl/search/kdtree.h>
 #include <pcl/features/normal_3d_omp.h>
 #include <pcl/filters/conditional_removal.h>
+#include <pcl/registration/ndt.h>
+#include <pcl/filters/approximate_voxel_grid.h>
 #include <boost/circular_buffer.hpp>
 
 
@@ -47,3 +49,4 @@ namespace ic_graph
 
 
 }
+#endif
