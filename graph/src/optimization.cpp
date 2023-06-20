@@ -1,7 +1,7 @@
-#include"optimization.hpp"
-#include"imu_integration/imu_Integration.hpp"
-#include"utils.hpp"
-#include <Eigen
+#include"graph/optimization.hpp"
+#include"graph/imuIntegration.hpp"
+#include"graph/utils.hpp"
+#include <Eigen>
 
 namespace ic_graph {
 
@@ -10,7 +10,7 @@ Optimization::Optimization() : Node("optimization")
     isamParams.relinearizeTreshold = 0.01; //define proper value
     isamParams.relinearizeSkip = 1;
     double fixedLag = 2.0;
-    priorKey = 0;
+    stateKey_ = 0;
     factorsGraph_ = std::make_shared<gtsam::NonlinearFactorGraph>();
     graphValues_ = std::make_shared<gtsam::Values>();
     fixedLagSmoother_ = std::make_shared<gtsam::IncrementalFixedLagSmoother>(fixedLag,isamParams); 
@@ -72,7 +72,6 @@ void Optimization::initGraph(const double time, const gtsam::Pose3& initialPose)
     prevBias_ = gtsam::imuBias::ConstantBias();
     gtsam::PriorFactor<gtsam::imuBias::ConstantBias> priorBias(B(0), prevBias_, priorBiasNoise);
     factorsGraph->add(priorBias);
-    imuPre
     // add values to the graph
     graphValues->insert(X(0), prevPose_);
     graphValues->insert(V(0), prevVel_);
@@ -83,8 +82,8 @@ void Optimization::initGraph(const double time, const gtsam::Pose3& initialPose)
     factorsGraph_->resize(0);
     graphValues->clear();
 
-    imuPredictedState_ = gtsam::NavState(initialPose, gtsam::Vector3(0,0,0));
-
+    imuPredictedState_ = gtsam::NavState(initialPose, gtsam::Vector3(0, 0, 0));
+    
     imu_integration::resetImu();
     key=1;
     initFlag = true;
@@ -99,11 +98,8 @@ void Optimization::imuManager(const sensor_msgs::msg::Imu::ConstPtr& imuRaw)
     if ()
     {
         Optimization::addImuFactor(linearAccel, angularVel);
-    }
-    
-    else 
-    {
-        return;
+        optimizeGraph();
+
     }
 
 }
@@ -128,14 +124,21 @@ void Optimization::imuManager(const sensor_msgs::msg::Imu::ConstPtr& imuRaw)
 }*/
 
 
-void Optimization::addIMUFactor(const Eigen::Vector3d& linearAcc, const Eigen::Vector3d& angularVel, const double time)
+void Optimization::addIMUFactor(const double imuTime)
 {
     gtsam::key oldKey;
     gtsam::key newKey;
+    {
+    stateTime_ = imuTime;
     prevBias_ = gtsam::imuBias::ConstantBias();
+    //get keys
+    oldKey = stateKey_ ; 
+    newKey = newStateKey_();
+    imu_integration::addKey2Buffer(imuTime, newKey);
+
     // Update the IMU preintegrator
     imu_integration::updateIntegration(start_time, end_time);
-    gtsam::NavState imuPredictedState = imuPreintegrationPtr_->predict(imuPredictedState)
+    imuPredictedState_ = imuPreintegrationPtr_->predict(imuPredictedState, bias);
     gtsam::CombinedImuFactor imuFactor(gtsam::symbol_shorthand::X(oldKey), gtsam::symbol_shorthand::V(oldKey)
                                        gtsam::symbol_shorthand::X(newKey), gtsam::symbol_shorthand::V(newKey)
                                        gtsam::symbol_shorthand::B(oldKey), gtsam::symbol_shorthand::B(newKey), *imuPreintegrationPtr_);
@@ -152,6 +155,7 @@ void Optimization::addIMUFactor(const Eigen::Vector3d& linearAcc, const Eigen::V
     if (useGnssFlag)
     {
         Optimization::addGnssFactor();
+    }
     }
 }
 
@@ -176,11 +180,6 @@ void Optimization::addDualLidarOdomFactor(const nav_msgs::msg::Odometry::SharedP
     float rot_W = odomData-> pose.rotation.W;
     gtsam::Pose3 lidarPose = gtsam::Pose3(gtsam::Rot3::Quaternion(rot_W, rot_X, rot_Y, rot_Z), gtsam::Point3(pos_X, pos_Y, pos_W));
     factorsGraph->add(lidarFactor_);
-}
-
-void Optimization::addDualLidarOdomFactor()
-{
-    factorsGraph->add(lidarDualFactor_);
 }
 
 void Optimization::addGnssFactor()

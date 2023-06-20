@@ -1,5 +1,5 @@
-#include "utils.hpp"
-#include "lidar.hpp"
+#include "graph/utils.hpp"
+#include "graph/lidar.hpp"
 #include <tf2_eigen/tf2_eigen.hpp>
 namespace ic_graph 
 {

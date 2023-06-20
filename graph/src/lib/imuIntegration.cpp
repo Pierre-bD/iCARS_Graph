@@ -1,6 +1,6 @@
 
-#include "imu_Integration.hpp"
-#include "utils.hpp"
+#include "graph/imuIntegration.hpp"
+#include "graph/utils.hpp"
 
 using namespace std::chrono_literals;
 namespace imu_integration {
@@ -47,18 +47,18 @@ bool IMUintegration::initImu(const double grav, const std::string& gravityDir)
   return true;
 }
 
-void IMUintegration::convertImu()
-{
-  imuData = *imuRaw;
+//void IMUintegration::convertImu()
+//{
+  //imuData = *imuRaw;
     
-    acc = extRot * acc;
-    imu.
+   // acc = extRot * acc;
+   // imu.
     
 
     
-    gyro = exRot * gyro;
-    imu.
-}
+    //gyro = exRot * gyro;
+    //imu.
+//}
 /*void IMUintegration::addImu2Buffer(double tsp, double accx, double accy, double accz, double gyrox, double gyroy, double gyroz)
   {
     imuData << accx, accz, accz, gyrox, gyroy, gyroz;
@@ -72,12 +72,11 @@ void IMUintegration::convertImu()
   }*/
 void IMUintegration::addImu2Buffer(Eigen::Vector3d& acc, Eigen::Vector3d& vel, const double time)
 {
-  imu_integration::ImuMeasurement filtered_measurement;
+  const imu_integration::ImuMeasurement filtered_measurement;
   filtered_measurement.accel = acc;
   filtered_measurement.angular_vel = vel;
   filtered_measurement.timestamp = time;
-  imuMap_.emplace(filtered_measurement->timestamp, *filtered_measurement);
-  
+  imuMap_.emplace(filtered_measurement->timestamp, *filtered_measurement);  
 }
   
 void IMUintegration::addKey2Buffer(double tsp, gtsam::Key key)
@@ -91,15 +90,15 @@ void IMUintegration::addKey2Buffer(double tsp, gtsam::Key key)
 
   }
 
-bool IMUintegration::resetImu()
+bool IMUintegration::resetImu(const gtsam::imuBias::ConstantBias& bias)
   {
-    imuPreintegration->resetIntegrationAndSetBias();
-    imuResetFlag = true;
-    return imuResetFlag;
+    imuPreintegration->resetIntegrationAndSetBias(bias);
+    //imuResetFlag = true;
+    //return imuResetFlag;
 
   }
 
-boost::optional<imu_integration::ImuMeasurement> interpolateImu(const imu_integration::ImuMeasurement& meas_a,
+boost::optional<imu_integration::ImuMeasurement> IMUintegration::interpolateImu(const imu_integration::ImuMeasurement& meas_a,
                                                                 const imu_integration::ImuMeasurement& meas_b,
                                                                 const double timestamp)
 {
@@ -120,7 +119,7 @@ void IMUintegration::addMeasurement(const imu_integration::ImuMeasurement& imu_m
   last_added_measurement_time = imu_measurement.timestamp;
 }
 
-void IMUintegration::updateIntegration(const& measures)
+void IMUintegration::updateIntegration(const double start_time, const double end_time)
   {
     if (imuMap_.size()<2)
     {
@@ -133,16 +132,21 @@ void IMUintegration::updateIntegration(const& measures)
     auto measurement_it = imuMap_.upper_bound(start_time);
     //auto currentIter = measures.begin();
     //auto prevIter = currentIter;
-    for (++currentIter;)
+    double last_added_measurement_time = start_time;
+    int num_measurement_added = 0;
+    for (measurement_it !=imuMap_.cend() && measurement_it->first <= end_time, ++measurement_it)
     {
-      addMeasurement(measurement_it)
+      addMeasurement(measurement_it->second, last_added_measurement_time);
+      ++num_measurement_added;
     }
     
-    if()
+    if(last_added_measurement_time != end_time)
     {
-        const auto interpolated_measurement = imu_integration::interpolateImu(std::prev,/*last_time*/);
+        const auto interpolated_measurement = imu_integration::interpolateImu(std::prev(measurement_it)->second, measurement_it->second, end_time);
+        addMeasurement(*interpolated_measurement, last_added_measurement_time);
+        ++num_measurement_added;
     }
-   
+   std::cout<<"IntegrateImuMeasurement : Num imu measurement integrated: " << num_measurement_added <<std::endl;
   }
 
 //publishImuOdometry = create_publisher<nav_msgs::msg::Odometry>(imuOdomTopic,);

@@ -1,7 +1,7 @@
 #ifndef _OPTIMIZATION_HPP_
 #define _OPTIMIZATION_HPP_
 
-#include "utils.hpp"
+#include "graph/utils.hpp"
 
 //########//
 // Include gtsam libraries
@@ -41,6 +41,8 @@ namespace ic_graph {
         std::shared_ptr<gtsam::Values> graphValues_;
         gtsam::ISAM2Params isamParams; //ISAM2 parameters
         gtsam::FixedLagSmootherKeyTimestampMap keyTimeStampMap_;
+        gtsam::Key stateKey_;
+        gtsam::NavState imuPredictedState_;
         
         public: 
 
@@ -85,12 +87,21 @@ namespace ic_graph {
         gtsam::NavState currState;
         gtsam::key priorKey;
         gtsam::key key;
+        
+        
+        const auto newStateKey_() {return ++stateKey_;}
+        double stateTime_;
 
         gtsam::noiseModel::Diagonal::shared_ptr priorPoseNoise;
         //gtsam::noiseModel::Diagonal::shared_ptr priorVelNoise;
         gtsam::noiseModel::Diagonal::shared_ptr priorBiasNoise;
         gtsam::noiseModel::Diagonal::shared_ptr correctionNoise;
         gtsam::noiseModel::Isotropic::shared_ptr priorVelNoise;
+        // Transformations
+        gtsam::Pose3 T_W_O_; //change name
+        gtsam::Vector3 I_v_W_I; //change name
+
+
         // Transformations
         gtsam::Pose3 T_W_O_; //change name
         gtsam::Vector3 I_v_W_I; //change name

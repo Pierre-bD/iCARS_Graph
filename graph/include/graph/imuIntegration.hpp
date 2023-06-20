@@ -1,7 +1,6 @@
 
-#ifndef IMU_INTEGRATION_IMUINTEGRATION_HPP_
-#define IMU_INTEGRATION_IMUINTEGRATION_HPP_
-
+#ifndef _IMUINTEGRATION_HPP_
+#define _IMUINTEGRATION_HPP_
 #include "utils.hpp"
 #include "sensors/imu.hpp"
 #include <sensor_msgs/msg/imu.hpp>
@@ -47,8 +46,8 @@ namespace imu_integration
         
         //imuPreintegration = new gtsam::PreintegratedCombinedMeasurements(,);
         private: 
-
-        bool initImu();
+     
+        bool initImu(const double grav, const std::string& gravityDir);
 
         //void addImu2Buffer(const );
         void addImu2Buffer(Eigen::Vector3d& acc, Eigen::Vector3d& vel, const double time);
@@ -59,16 +58,20 @@ namespace imu_integration
             const imu_integration::ImuMeasurement& meas_a, 
             const imu_integration::ImuMeasurement& meas_b, 
             const double timestamp);
-        std::map<const double time, imu_integration::ImuMeasurement> imuMap_;
-        bool resetImu();
+
+        std::map<const double, imu_integration::ImuMeasurement> imuMap_;
+        bool resetImu(const gtsam::imuBias::ConstantBias& bias);
         void addMeasurement(const imu_integration::ImuMeasurement& imu_measurement, double& last_added_measurement_time);
-        void updateIntegration();
+        void updateIntegration(const double start_time, const double end_time);
 
         // see if I put the following in this file or in optimization or loc_graph
 
         //gtsam::noiseModel::Diagonal::shared_ptr
     };
 }
+
+
+#endif
 
 
 #endif
