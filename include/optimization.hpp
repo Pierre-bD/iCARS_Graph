@@ -63,9 +63,15 @@ namespace ic_graph {
         rclcpp::CallbackGroup::SharedPtr callbackGroupGnss;
 
         //Prior noise model 
+<<<<<<< HEAD
         //auto priorPoseNoise = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.5, 0.5, 0.5).finished());
         //auto priorVelNoise = noiseModel::Isotropic::Sigma(3, 0.1);
         //auto priorBiasNoise = noiseModel::Isotropic::Sigma(6, 1e-3);
+=======
+        auto priorPoseNoise = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.5, 0.5, 0.5).finished());
+        auto priorVelNoise = noiseModel::Isotropic::Sigma(3, 0.1);
+        auto priorBiasNoise = noiseModel::Isotropic::Sigma(6, 1e-3);
+>>>>>>> main
         auto pose_noise_model = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.5, 0.5, 0.5).finished());  // rad,rad,rad,m, m, m
         auto velocity_noise_model = noiseModel::Isotropic::Sigma(3, 0.1);  // m/s
         auto bias_noise_model = noiseModel::Isotropic::Sigma(6, 1e-3);
@@ -91,6 +97,11 @@ namespace ic_graph {
         gtsam::noiseModel::Diagonal::shared_ptr priorBiasNoise;
         gtsam::noiseModel::Diagonal::shared_ptr correctionNoise;
         gtsam::noiseModel::Isotropic::shared_ptr priorVelNoise;
+        // Transformations
+        gtsam::Pose3 T_W_O_; //change name
+        gtsam::Vector3 I_v_W_I; //change name
+
+
         // Transformations
         gtsam::Pose3 T_W_O_; //change name
         gtsam::Vector3 I_v_W_I; //change name
