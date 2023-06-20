@@ -46,6 +46,10 @@ Optimization::Optimization() : Node("optimization")
     //subCarlaPose = create_subscription<nav_msgs::msg
 }
        
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> main
 void Optimization::initGraph(const double time, const gtsam::Pose3& initialPose) // graph initialization 
 {
     ///void reset optimization ??
@@ -53,6 +57,14 @@ void Optimization::initGraph(const double time, const gtsam::Pose3& initialPose)
     //factorsGraph_->addPrior(X(,priorPose, pose_noise_model));
     //factorsGraph_->addPrior(V(,priorVelocity, velocity_noise_model));
     //factorsGraph_->addPrior(B(,priorImuBias, bias_noise_model));
+<<<<<<< HEAD
+=======
+=======
+void Optimization::initGraph() // graph initialization 
+{
+    ///void reset optimization ??
+>>>>>>> main
+>>>>>>> main
 
     priorPoseNoise->Sigmas((gtsam::Vector(6)<<1e-3, 1e-3, 1e-3, 1e-6, 1e-6, 1e-6).finished());
     priorVelNoise->Sigma(3, 1e-3);
@@ -94,6 +106,10 @@ void Optimization::imuManager(const sensor_msgs::msg::Imu::ConstPtr& imuRaw)
 {
     Eigen::Vector3d linearAccel(imuRaw->linear_acceleration.x, imuRaw->linear_acceleration.y, imuRaw->linear_acceleration.z);
     Eigen::Vector3d angularVel(imuRaw->angular_velocity.x, imuRaw->angular_velocity.y, imuRaw->angular_velocity.z);
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+>>>>>>> main
 
     IMUintegration::addImu2Buffer(linearAccel, angularVel, timestamp);
     if ()
@@ -105,6 +121,14 @@ void Optimization::imuManager(const sensor_msgs::msg::Imu::ConstPtr& imuRaw)
     {
         return;
     }
+<<<<<<< HEAD
+=======
+=======
+    
+    IMUintegration::addImu2Buffer();
+    Optimization::addImuFactor(,linearAccel, angularVel);
+>>>>>>> main
+>>>>>>> main
 
 }
 /*void Optimization::gnssManager()
@@ -128,14 +152,32 @@ void Optimization::imuManager(const sensor_msgs::msg::Imu::ConstPtr& imuRaw)
 }*/
 
 
+<<<<<<< HEAD
 void Optimization::addIMUFactor(const Eigen::Vector3d& linearAcc, const Eigen::Vector3d& angularVel, const double time)
+=======
+<<<<<<< HEAD
+void Optimization::addIMUFactor(const Eigen::Vector3d& linearAcc, const Eigen::Vector3d& angularVel, const double time)
+=======
+void Optimization::addIMUFactor(const double time, const Eigen::Vector3d& linearAcc, const Eigen::Vector3d& angularVel)
+>>>>>>> main
+>>>>>>> main
 {
     gtsam::key oldKey;
     gtsam::key newKey;
     prevBias_ = gtsam::imuBias::ConstantBias();
     // Update the IMU preintegrator
+<<<<<<< HEAD
     imu_integration::updateIntegration(start_time, end_time);
     gtsam::NavState imuPredictedState = imuPreintegrationPtr_->predict(imuPredictedState)
+=======
+<<<<<<< HEAD
+    imu_integration::updateIntegration();
+    gtsam::NavState imuPredictedState = imuPreintegrationPtr_->predict(imuPredictedState)
+=======
+    IMUintegration::updateIntegration();
+    imuPredictedState_  = imuPreintegrationPtr_->predict()
+>>>>>>> main
+>>>>>>> main
     gtsam::CombinedImuFactor imuFactor(gtsam::symbol_shorthand::X(oldKey), gtsam::symbol_shorthand::V(oldKey)
                                        gtsam::symbol_shorthand::X(newKey), gtsam::symbol_shorthand::V(newKey)
                                        gtsam::symbol_shorthand::B(oldKey), gtsam::symbol_shorthand::B(newKey), *imuPreintegrationPtr_);
@@ -179,6 +221,9 @@ void Optimization::addDualLidarOdomFactor(const nav_msgs::msg::Odometry::SharedP
 }
 
 void Optimization::addDualLidarOdomFactor()
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
 {
     factorsGraph->add(lidarDualFactor_);
 }
@@ -191,6 +236,24 @@ void Optimization::addGnssFactor()
     factorsGraph->add(gnssYawFactor);
 }
 
+=======
+>>>>>>> main
+{
+    factorsGraph->add(lidarDualFactor_);
+}
+
+void Optimization::addGnssFactor()
+{
+    gnss::addGnssFactor(); // To Do 
+    gnss::addGnssYaw(); // To Do
+    factorsGraph->add(gnssPosFactor);
+    factorsGraph->add(gnssYawFactor);
+}
+
+<<<<<<< HEAD
+=======
+>>>>>>> main
+>>>>>>> main
 /*######*/
 /*Graph optimization function*/
 /*######*/
