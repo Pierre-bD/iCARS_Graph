@@ -1,6 +1,6 @@
 
-#include "graph/imuIntegration.hpp"
-#include "graph/utils.hpp"
+#include "imuIntegration.hpp"
+#include "utils.hpp"
 
 using namespace std::chrono_literals;
 namespace imu_integration {

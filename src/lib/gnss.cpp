@@ -1,6 +1,6 @@
-#include "sensors/gnss.hpp"
+#include "gnss.hpp"
 namespace ic_graph {
-gnss::gnss(/* args */){}
+gnss::gnss(){}
 
     
     void gnss::addGnssPosition()
@@ -8,8 +8,6 @@ gnss::gnss(/* args */){}
         //program
     }
 
-<<<<<<< HEAD
-=======
 #include "gnss.hpp"
 namespace ic_graph {
 gnss::gnss(/* args */){}
@@ -20,9 +18,9 @@ gnss::gnss(/* args */){}
         //program
     }
 
->>>>>>> main
     void gnss::addGnssYaw()
     {
         //program
     }
+}
 }

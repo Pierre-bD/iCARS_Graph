@@ -3,7 +3,6 @@
 
 
 //#include <Eigen>
-<<<<<<< HEAD
 
 namespace ic_graph {
 class gnss
@@ -17,7 +16,6 @@ public:
     void addGnssPosition();
     void addGnssYaw();
 
-=======
 
 namespace ic_graph {
 class gnss
@@ -31,14 +29,13 @@ public:
     void addGnssPosition();
     void addGnssYaw();
 
->>>>>>> main
 };
 
 
 
-
 }
-
+}
+}
 
 
 

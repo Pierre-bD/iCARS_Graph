@@ -1,6 +1,6 @@
-#include"graph/optimization.hpp"
-#include"graph/imuIntegration.hpp"
-#include"graph/utils.hpp"
+#include"optimization.hpp"
+#include"imuIntegration.hpp"
+#include"utils.hpp"
 #include <Eigen>
 
 namespace ic_graph {

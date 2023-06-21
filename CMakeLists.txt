@@ -2,7 +2,7 @@ cmake_minimum_required(VERSION 3.20.0)
 project(ic_graph VERSION 0.2.0)
 
 # specify the C++ standard
-set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
@@ -11,6 +11,7 @@ enable_testing()
 #
 find_package(GTSAM REQUIRED)
 find_package(Eigen3 REQUIRED)
+find_package(Boost REQUIRED)
 #Add Ros2 packages
 find_package(rclcpp REQUIRED)
 find_package(std_msgs REQUIRED)
@@ -22,9 +23,18 @@ find_package(ament_cmake REQUIRED)
 
 include_directories(include)
 
+add_library(${PROJECT_NAME} SHARED
+  src/lib/imuIntegration.cpp
+  src/lib/gnss.cpp
+  src/lib/lidar.cpp
+  src/imuFilter.cpp
+)
+
 add_executable(${PROJECT_NAME}_test src/test.cpp)
 add_executable(${PROJECT_NAME}_optimization src/optimizarion.cpp)
-add_executable(${PROJECT_NAME}_imuIntegration src/imuIntegration.cpp)
+add_executable(${PROJECT_NAME}_carlaLidar src/carla_lidar.cpp)
+#add_executable(${PROJECT_NAME}_map src/map.cpp)
+#add_executable(${PROJECT_NAME}_lidarOdom src/lidarOdom.cpp)
 
 #rosidl_generate_interfaces(${PROJECT_NAME}
   #  "msg/preint.msg"
