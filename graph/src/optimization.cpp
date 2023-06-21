@@ -17,10 +17,14 @@ Optimization::Optimization() : Node("optimization")
     imuPreintegration_ = std::make_shared<gtsam::PreintegratedCombinedMeasurements>(imuparams, *imuPriorBias_);
     bool initFlag = false;
     bool useGnssFlag = false;
+
     //Define prior noise for first optimisation
-    //priorPoseNoise = gtsam::noiseModel::Diagonal::sigmas();
-    //priorVelNoise = gtsam::noiseModel::Diagonal::sigma();
-    //priorBiasNoise = gtsam::noiseModel::Diagonal::sigma();
+    priorPoseNoise = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.5, 0.5, 0.5).finished());
+    priorVelNoise = noiseModel::Isotropic::Sigma(3, 0.1);
+    priorBiasNoise = noiseModel::Isotropic::Sigma(6, 1e-3);
+    correctionNoise = gtsam::noiseModel::Diagonal::Sigmas((gtsam::Vector(6) << 0.05, 0.05, 0.05, 0.1, 0.1, 0.1).finished()); // rad,rad,rad,m, m, m
+    correctionNoise2 = gtsam::noiseModel::Diagonal::Sigmas((gtsam::Vector(6) << 1, 1, 1, 1, 1, 1).finished()); // rad,rad,rad,m, m, m
+    noiseModelBetweenBias = (gtsam::Vector(6) << imuAccBiasN, imuAccBiasN, imuAccBiasN, imuGyrBiasN, imuGyrBiasN, imuGyrBiasN).finished();
     
     // create callback group
     callbackGroupImu = create_callback_group(rclcpp::CallbackGroupType::MutuallyExclusive);
@@ -78,7 +82,7 @@ void Optimization::initGraph(const double time, const gtsam::Pose3& initialPose)
     graphValues->insert(B(0), prevBias_);
 
     // optimize once
-    isam2->update(factorsGraph, graphValues); //CHECK THE DECLARATION OF OPTIMIZER
+    ->update(factorsGraph, graphValues); //CHECK THE DECLARATION OF OPTIMIZER
     factorsGraph_->resize(0);
     graphValues->clear();
 
@@ -131,6 +135,7 @@ void Optimization::addIMUFactor(const double imuTime)
     {
     stateTime_ = imuTime;
     prevBias_ = gtsam::imuBias::ConstantBias();
+
     //get keys
     oldKey = stateKey_ ; 
     newKey = newStateKey_();
@@ -138,14 +143,17 @@ void Optimization::addIMUFactor(const double imuTime)
 
     // Update the IMU preintegrator
     imu_integration::updateIntegration(start_time, end_time);
-    imuPredictedState_ = imuPreintegrationPtr_->predict(imuPredictedState, bias);
+    
     gtsam::CombinedImuFactor imuFactor(gtsam::symbol_shorthand::X(oldKey), gtsam::symbol_shorthand::V(oldKey)
                                        gtsam::symbol_shorthand::X(newKey), gtsam::symbol_shorthand::V(newKey)
                                        gtsam::symbol_shorthand::B(oldKey), gtsam::symbol_shorthand::B(newKey), *imuPreintegrationPtr_);
-    factorsGraph->add(imuFactor);
+    factorsGraph_->add(imuFactor);
+    factorsGraph_->add(gtsam::BetweenFactor<gtsam::imuBias::ConstantBias>(B(newKey), B(oldKey), gtsam::imuBias::ConstantBias(),gtsam::noiseModel::Diagonal::Sigmas(sqrt(imuPreintegrationPtr_->deltaTij()) * noiseModelBetweenBias)));
+
 
      // Add IMU values
     gtsam::Values valuesEstimate;
+    imuPredictedState_ = imuPreintegrationPtr_->predict(imuPredictedState, bias);
     valuesEstimate.insert(gtsam::symbol_shorthand::X(newKey), imuPredictedState_.pose());
     valuesEstimate.insert(gtsam::symbol_shorthand::V(newKey), imuPredictedState_.velocity());
     valuesEstimate.insert(gtsam::symbol_shorthand::B(newKey), prevBias_);
@@ -166,7 +174,7 @@ void Optimization::addIMUFactor(const double imuTime)
 //{
  //   factorsGraph->add(odometryFactor_);
 //}
-
+/*
 void Optimization::addDualLidarOdomFactor(const nav_msgs::msg::Odometry::SharedPtr odomData)
 {
     const std::lock_guard<std::mutex> lock(lidarMutex_);
@@ -181,14 +189,14 @@ void Optimization::addDualLidarOdomFactor(const nav_msgs::msg::Odometry::SharedP
     gtsam::Pose3 lidarPose = gtsam::Pose3(gtsam::Rot3::Quaternion(rot_W, rot_X, rot_Y, rot_Z), gtsam::Point3(pos_X, pos_Y, pos_W));
     factorsGraph->add(lidarFactor_);
 }
-
-void Optimization::addGnssFactor()
+*/
+/*void Optimization::addGnssFactor()
 {
     gnss::addGnssFactor(); // To Do 
     gnss::addGnssYaw(); // To Do
     factorsGraph->add(gnssPosFactor);
     factorsGraph->add(gnssYawFactor);
-}
+}*/
 
 /*######*/
 /*Graph optimization function*/
@@ -207,11 +215,8 @@ void Optimization::optimizeGraph()
 
     startOpti = std::chrono::high_resolution_clock::now();
     
-    gtsam::NavState optimizedState = updateGraph();
-    optimizedState.pose();
-    
-    
-    currState = 
+    //gtsam::NavState optimizedState = updateGraph();
+    //optimizedState.pose();
 
     fixedLagSmoother_->update(factorsGraph, valuesGraph);
     endOpti = std::chrono::high_resolution_clock::now();

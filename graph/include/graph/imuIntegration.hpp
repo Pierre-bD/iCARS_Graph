@@ -28,7 +28,7 @@ namespace imu_integration
 
 
         bool imuResetFlag;
-        boost::shared_ptr<gtsam::PreintegratedCombinedMeasurements::Params> preintParams_;
+        std::shared_ptr<gtsam::PreintegratedCombinedMeasurements::Params> preintParams_;
         std::shared_ptr<gtsam::imuBias::ConstantBias> imuPriorBias_;
         std::shared_ptr<gtsam::PreintegratedCombinedMeasurements> imuPreintegrationPtr_;
 

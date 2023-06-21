@@ -65,29 +65,18 @@ namespace ic_graph {
         rclcpp::CallbackGroup::SharedPtr callbackGroupGnss;
 
         //Prior noise model 
-<<<<<<< HEAD:graph/include/graph/optimization.hpp
-        //auto priorPoseNoise = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.5, 0.5, 0.5).finished());
-        //auto priorVelNoise = noiseModel::Isotropic::Sigma(3, 0.1);
-        //auto priorBiasNoise = noiseModel::Isotropic::Sigma(6, 1e-3);
-=======
-<<<<<<< HEAD
-        //auto priorPoseNoise = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.5, 0.5, 0.5).finished());
-        //auto priorVelNoise = noiseModel::Isotropic::Sigma(3, 0.1);
-        //auto priorBiasNoise = noiseModel::Isotropic::Sigma(6, 1e-3);
-=======
-        auto priorPoseNoise = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.5, 0.5, 0.5).finished());
-        auto priorVelNoise = noiseModel::Isotropic::Sigma(3, 0.1);
-        auto priorBiasNoise = noiseModel::Isotropic::Sigma(6, 1e-3);
->>>>>>> main
->>>>>>> main:include/optimization.hpp
+
+        gtsam::noiseModel::Diagonal::shared_ptr priorPoseNoise;
+        gtsam::noiseModel::Diagonal::shared_ptr priorVelNoise;
+        gtsam::noiseModel::Diagonal::shared_ptr priorBiasNoise;
+
         auto pose_noise_model = noiseModel::Diagonal::Sigmas((Vector(6) << 0.01, 0.01, 0.01, 0.5, 0.5, 0.5).finished());  // rad,rad,rad,m, m, m
         auto velocity_noise_model = noiseModel::Isotropic::Sigma(3, 0.1);  // m/s
         auto bias_noise_model = noiseModel::Isotropic::Sigma(6, 1e-3);
-        //Define parameters for ISAM2 optimizer
-        //gtsam::ISAM2Params isamParams;
-        //isamParams.relinearizeTreshold = 0.01; //define proper value
-        //isamParams.relinearizeSkip = 1;
-        //factorGraph.;
+
+        float imuAccBiasN;
+        float imuGyrBiasN;
+
 
         //Previous State
         gtsam::Pose3 prevPose_;
@@ -108,6 +97,9 @@ namespace ic_graph {
         //gtsam::noiseModel::Diagonal::shared_ptr priorVelNoise;
         gtsam::noiseModel::Diagonal::shared_ptr priorBiasNoise;
         gtsam::noiseModel::Diagonal::shared_ptr correctionNoise;
+        gtsam::noiseModel::Diagonal::shared_ptr correctionNoise;
+        gtsam::noiseModel::Diagonal::shared_ptr correctionNoise2;
+        gtsam::Vector noiseModelBetweenBias;
         gtsam::noiseModel::Isotropic::shared_ptr priorVelNoise;
         // Transformations
         gtsam::Pose3 T_W_O_; //change name
@@ -119,16 +111,16 @@ namespace ic_graph {
         gtsam::Vector3 I_v_W_I; //change name
 
 
-        void initGraph(); //init graph at start-up
+        void initGraph(const double time, const gtsam::Pose3& initialPose); //init graph at start-up
         void optimizeGraph(); //optimize the graph after adding factors and values
-        void addIMUFactor(const double time, const Eigen::Vector3d& linearAcc, Eigen::Vector3d& angularVel);
+        void addIMUFactor(const double time);
         //void addOdometryFactor();
-        void addLidarOdomFactor();
-        void addDualLidarOdomFactor();
-        void addGnssFactor();
-        void imuManager();
-        void lidarOdomManager();
-        void gnssManager();
+        //void addLidarOdomFactor();
+        //void addDualLidarOdomFactor(const nav_msgs::msg::Odometry::SharedPtr odomData);
+        //void addGnssFactor();
+        void imuManager(const sensor_msgs::msg::Imu::ConstPtr& imuRaw);
+        //void lidarOdomManager();
+        //void gnssManager();
         
     };
 
