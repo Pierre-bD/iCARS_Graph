@@ -29,6 +29,7 @@ namespace ic_graph {
         private:
         //rclcpp::Subscription<nav_msgs::msg::Odometry>::SharedPtr subImuOdometry;    
         std::mutex lidarMutex_;
+        std::mutex optimizationMutex_;
         std::chrono::time_point<std::chrono::high_resolution_clock> startOpti;
         std::chrono::time_point<std::chrono::high_resolution_clock> endOpti;
         //define noise model for testing with GTSAM data
@@ -49,7 +50,9 @@ namespace ic_graph {
         Optimization();  //Constructor
         bool imuResetFlag = true;
         bool firstOptiFlag = false;
-    
+        gtsam::Key oldKey;
+        gtsam::Key newKey;
+
         
         //######//
         // Publisher / callback
@@ -94,9 +97,9 @@ namespace ic_graph {
         double stateTime_;
 
         gtsam::noiseModel::Diagonal::shared_ptr priorPoseNoise;
-        //gtsam::noiseModel::Diagonal::shared_ptr priorVelNoise;
+        gtsam::noiseModel::Diagonal::shared_ptr priorVelNoise;
         gtsam::noiseModel::Diagonal::shared_ptr priorBiasNoise;
-        gtsam::noiseModel::Diagonal::shared_ptr correctionNoise;
+        
         gtsam::noiseModel::Diagonal::shared_ptr correctionNoise;
         gtsam::noiseModel::Diagonal::shared_ptr correctionNoise2;
         gtsam::Vector noiseModelBetweenBias;
@@ -105,14 +108,9 @@ namespace ic_graph {
         gtsam::Pose3 T_W_O_; //change name
         gtsam::Vector3 I_v_W_I; //change name
 
-
-        // Transformations
-        gtsam::Pose3 T_W_O_; //change name
-        gtsam::Vector3 I_v_W_I; //change name
-
-
         void initGraph(const double time, const gtsam::Pose3& initialPose); //init graph at start-up
         void optimizeGraph(); //optimize the graph after adding factors and values
+        
         void addIMUFactor(const double time);
         //void addOdometryFactor();
         //void addLidarOdomFactor();

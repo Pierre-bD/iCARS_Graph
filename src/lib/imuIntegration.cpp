@@ -93,8 +93,8 @@ void IMUintegration::addKey2Buffer(double tsp, gtsam::Key key)
 bool IMUintegration::resetImu(const gtsam::imuBias::ConstantBias& bias)
   {
     imuPreintegration->resetIntegrationAndSetBias(bias);
-    //imuResetFlag = true;
-    //return imuResetFlag;
+    imuResetFlag = true;
+    return imuResetFlag;
 
   }
 

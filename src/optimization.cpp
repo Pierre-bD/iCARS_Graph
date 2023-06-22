@@ -10,6 +10,7 @@ Optimization::Optimization() : Node("optimization")
     isamParams.relinearizeTreshold = 0.01; //define proper value
     isamParams.relinearizeSkip = 1;
     double fixedLag = 2.0;
+    const double gravity = 9.81;
     stateKey_ = 0;
     factorsGraph_ = std::make_shared<gtsam::NonlinearFactorGraph>();
     graphValues_ = std::make_shared<gtsam::Values>();
@@ -50,7 +51,7 @@ Optimization::Optimization() : Node("optimization")
     //subCarlaPose = create_subscription<nav_msgs::msg
 }
        
-void Optimization::initGraph(const double time, const gtsam::Pose3& initialPose) // graph initialization 
+void Optimization::initGraph(const double optiTime, const gtsam::Pose3& initialPose) // graph initialization 
 {
     ///void reset optimization ??
 
@@ -58,12 +59,14 @@ void Optimization::initGraph(const double time, const gtsam::Pose3& initialPose)
     //factorsGraph_->addPrior(V(,priorVelocity, velocity_noise_model));
     //factorsGraph_->addPrior(B(,priorImuBias, bias_noise_model));
 
+    imu_integration::initImu(gravity, "up");
+
     priorPoseNoise->Sigmas((gtsam::Vector(6)<<1e-3, 1e-3, 1e-3, 1e-6, 1e-6, 1e-6).finished());
     priorVelNoise->Sigma(3, 1e-3);
     priorBiasNoise->Sigmas((gtsam::Vector(6)<<1e-3, 1e-3, 1e-3, 1e-3, 1e-3, 1e-3).finished());
     
     // Set initial pose
-    prevPose_ =  ; //-->FINISH THIS use carla first position
+    prevPose_ = initialPose ; //-->FINISH THIS use carla first position
     gtsam::PriorFactor<gtsam::Pose3> priorPose(X(0), prevPose_, priorPoseNoise);
     factorsGraph_->add(priorPose);
 
@@ -82,7 +85,7 @@ void Optimization::initGraph(const double time, const gtsam::Pose3& initialPose)
     graphValues->insert(B(0), prevBias_);
 
     // optimize once
-    ->update(factorsGraph, graphValues); //CHECK THE DECLARATION OF OPTIMIZER
+    fixedLagSmoother_->update(factorsGraph, graphValues, optiTime); //CHECK THE DECLARATION OF OPTIMIZER
     factorsGraph_->resize(0);
     graphValues->clear();
 
@@ -98,7 +101,9 @@ void Optimization::imuManager(const sensor_msgs::msg::Imu::ConstPtr& imuRaw)
     Eigen::Vector3d linearAccel(imuRaw->linear_acceleration.x, imuRaw->linear_acceleration.y, imuRaw->linear_acceleration.z);
     Eigen::Vector3d angularVel(imuRaw->angular_velocity.x, imuRaw->angular_velocity.y, imuRaw->angular_velocity.z);
 
-    IMUintegration::addImu2Buffer(linearAccel, angularVel, timestamp);
+    stateTime_ = imuRaw->header.stamp.sec + 1e-9 * imuRaw->header.stamp.nanosec;
+
+    IMUintegration::addImu2Buffer(linearAccel, angularVel, stateTime_);
     if ()
     {
         Optimization::addImuFactor(linearAccel, angularVel);
@@ -130,8 +135,6 @@ void Optimization::imuManager(const sensor_msgs::msg::Imu::ConstPtr& imuRaw)
 
 void Optimization::addIMUFactor(const double imuTime)
 {
-    gtsam::key oldKey;
-    gtsam::key newKey;
     {
     stateTime_ = imuTime;
     prevBias_ = gtsam::imuBias::ConstantBias();
@@ -160,11 +163,11 @@ void Optimization::addIMUFactor(const double imuTime)
 
     graphValues_->insert(valuesEstimate);
 
-    if (useGnssFlag)
-    {
-        Optimization::addGnssFactor();
-    }
-    }
+   // if (useGnssFlag)
+    //{
+      //  Optimization::addGnssFactor();
+    //}
+    //}
 }
 
 /*######*/
@@ -203,16 +206,15 @@ void Optimization::addDualLidarOdomFactor(const nav_msgs::msg::Odometry::SharedP
 /*######*/
 void Optimization::optimizeGraph() 
 {
+    std::lock_guard<std::mutex> lock(optimizationMutex_);
     if (initFlag == false)
     {
-        initGraph();
+        initGraph(stateTime_, );
     }
     //if (imuMeasFlag) 
     //{
      //   addIMUFactor();
-    //}
-    
-
+    //}  
     startOpti = std::chrono::high_resolution_clock::now();
     
     //gtsam::NavState optimizedState = updateGraph();
@@ -223,11 +225,17 @@ void Optimization::optimizeGraph()
     std::cout << " Whole optimization loop took :" << std::chrono::duration_cast<std::chrono::milliseconds>(endOpti - startOpti).count() << " milliseconds."
     << std::endl;
 
+
     factorsGraph_->resize(0);
     graphValues_->clear();
 
+    gtsam::Values result = fixedLagSmoother_->calculateEstimate();
+    prevPose_ = result.at<gtsam::Pose3>(X(newKey));
+    prevVel_ = result.at<gtsam::Vector3>(V(newKey));
+    prevState_ = result.at<gtsam::NavState(prevPose_, prevVel_);
+    prevBias_ = result.at<gtsam::imuBias::ConstantBias>(B(newKey));
 
-    
+    imu_integration::resetImu(prevBias_);  
 
 }
 

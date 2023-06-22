@@ -47,7 +47,7 @@ target_link_libraries(${PROJECT_NAME} gtsam)
 install(DIRECTORY launch DESTINATION share/${PROJECT_NAME})
 install(TARGETS ${PROJECT_NAME}_test DESTINATION lib/${PROJECT_NAME})
 install(TARGETS ${PROJECT_NAME}_optimization DESTINATION lib/${PROJECT_NAME})
-install(TARGETS ${PROJECT_NAME}_imuIntegration DESTINATION lib/${PROJECT_NAME})
+install(TARGETS ${PROJECT_NAME}_carlaLidar DESTINATION lib/${PROJECT_NAME})
 install(DIRECTORY "include/" DESTINATION include)
 
 
