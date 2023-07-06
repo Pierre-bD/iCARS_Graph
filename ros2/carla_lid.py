@@ -130,6 +130,12 @@ imu_bp.set_attribute('role_name','imu')
 imu_init_trans = carla.Transform(carla.Location(x=1.0, y=+0, z=1.6), carla.Rotation(pitch=0.0,yaw=0.0, roll=0.0))
 imu_clb = world.spawn_actor(imu_bp, imu_init_trans, attach_to=vehicle)
 
+######
+# Set up odometry sensor
+######
+odom_bp = bp_lib.find('sensor.pseudo.odom')
+odom_bp.set_attribute('role_name','odom')
+
 
 ######
 # Set up Gnss sensor

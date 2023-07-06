@@ -1,7 +1,7 @@
 #include "graph/utils.hpp"
 #include "graph/lidar.hpp"
 #include <tf2_eigen/tf2_eigen.hpp>
-namespace ic_graph 
+namespace lidr_odom  
 {
     lidarOdom::lidarOdom()
     {
@@ -79,11 +79,11 @@ int main(int argc, char** argv){
     rclcpp::init(argc, argv);
     rclcpp::NodeOptions nodeParam;
     nodeParam.use_intra_process_comms(true);
-    rclcpp::executors::MultiThreadedExecutor imuExec; //or use single thread, will see how many nodes I define
+    rclcpp::executors::MultiThreadedExecutor odomExec; //or use single thread, will see how many nodes I define
 
-    imuExec.add_node();
+    odomExec.add_node();
 
-    imuExec.spin();
+    odomExec.spin();
 
     return 0;
 }

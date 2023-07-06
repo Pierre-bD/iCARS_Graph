@@ -1,16 +1,8 @@
-/* ----------------------------------------------------------------------------
-    Copyright (c) 2023, Pierre Baptiste Demonceaux
-    All Rights Reserved.
-    This file is released under the "BSD-2-Clause License".
+
+#include "graph/lidar.hpp"
+
+
+namespace lidar_odom 
+{
     
-    See LICENSE for the license information
- * -------------------------------------------------------------------------- */
-
-#include "lidar.hpp"
-
-
-export module Example;
-
-export void Hello() {
-    ;
 }

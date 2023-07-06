@@ -1,28 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?> 
 <package format="3">
-    <name>ic_graph</name>
-    <version>0.2.0</version>
-    <buildtool_depend>ament_cmake</buildtool_depend>
+  <name>ic_graph</name>
+  <version>0.2.0</version>
+  <description>Optimization graph package</description>
+  <maintainer email="pierrebaptiste.demonceaux@viacesi.fr">pierro</maintainer>
+  <license>Apache License 2.0</license>
 
-    <depend> </depend>
-    <buildtool_depend>rosidl_default_generator</buildtool_depend>
-    <exec_depend>rosidl_default_runtime</exec_depend>
-    <member_of_group>rosidl_interface_packages</member_of_group>
+  <buildtool_depend>ament_cmake</buildtool_depend>
 
-    <build_depend>rclcpp</build_depend>
-    <build_depend>std_msgs</build_depend>
-    <build_depend>sensor_msgs </build_depend>
-    <build_depend>nav_msgs</build_depend>
-    <build_depend>pcl_msgs</build_depend>
-    <build_depend>PCL</build_depend>
-    <build_depend>GTSAM</build_depend>  
-    <build_depend>Eigen</build_depend>
-
-    <test_depend>ament_lint_auto</test_depend>
-    <test_depend>ament_lint_common</test_depend>
+  <build_depend>rclcpp</build_depend>
+  <build_depend>std_msgs</build_depend>
+  <build_depend>sensor_msgs </build_depend>
+  <build_depend>nav_msgs</build_depend>
+  <build_depend>geometry_msgs</build_depend>
+  <build_depend>geographiclib</build_depend>
+  <build_depend>GTSAM</build_depend>  
+  <build_depend>Eigen</build_depend>
+  <build_depend>tf2</build_depend>
+  <build_depend>tf2_ros</build_depend>
     
-    <export>
-        <build_type>ament_cmake</build_type>
-    </export>
+  <exec_depend>rclcpp</exec_depend>
+  <exec_depend>std_msgs</exec_depend>
+  <exec_depend>sensor_msgs </exec_depend>
+  <exec_depend>nav_msgs</exec_depend>
+  <exec_depend>geometry_msgs</exec_depend>
+  <exec_depend>geographiclib</exec_depend>
+  <exec_depend>GTSAM</exec_depend>  
+  <exec_depend>Eigen</exec_depend>
+  <exec_depend>tf2</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+
+  <test_depend>ament_lint_auto</test_depend>
+  <test_depend>ament_lint_common</test_depend>
+    
+  <export>
+      <build_type>ament_cmake</build_type>
+  </export>
     
 </package>

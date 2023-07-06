@@ -19,7 +19,7 @@
 #include "utils.hpp"
 
 typedef pcl::PointXYZI pclPoint;
-namespace ic_graph 
+namespace lidar_odom 
 {
     class lidarOdom : public rclcpp:Node
     {
